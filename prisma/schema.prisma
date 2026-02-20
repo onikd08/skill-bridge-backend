@@ -40,13 +40,41 @@ model TutorProfile {
   id         String  @id @default(uuid())
   bio        String?
   experience Int
+  hourlyRate Float
+
   isFeatured Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  availability Availability[]
+  categories   Category[]     @relation("TutorCategories")
 
   @@map("tutorProfiles")
+}
+
+model Category {
+  id           String @id @default(uuid())
+  categoryName String
+
+  createdAt DateTime @default(now())
+
+  tutors TutorProfile[] @relation("TutorCategories")
+
+  @@map("categories")
+}
+
+model Availability {
+  id        String   @id @default(uuid())
+  startTime DateTime
+  endTime   DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tutorId      String
+  tutorProfile TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
 }

@@ -27,3 +27,13 @@ export type User = Prisma.UserModel
  * 
  */
 export type TutorProfile = Prisma.TutorProfileModel
+/**
+ * Model Category
+ * 
+ */
+export type Category = Prisma.CategoryModel
+/**
+ * Model Availability
+ * 
+ */
+export type Availability = Prisma.AvailabilityModel
