@@ -267,7 +267,7 @@ export type UserCreateInput = {
   password: string
   name: string
   role: $Enums.UserRole
-  status: $Enums.UserStatus
+  status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -278,7 +278,7 @@ export type UserUncheckedCreateInput = {
   password: string
   name: string
   role: $Enums.UserRole
-  status: $Enums.UserStatus
+  status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -311,7 +311,7 @@ export type UserCreateManyInput = {
   password: string
   name: string
   role: $Enums.UserRole
-  status: $Enums.UserStatus
+  status?: $Enums.UserStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
