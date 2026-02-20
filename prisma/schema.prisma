@@ -29,7 +29,24 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  tutorProfile TutorProfile?
+
   @@index([role])
   @@index([status])
   @@map("users")
+}
+
+model TutorProfile {
+  id         String  @id @default(uuid())
+  bio        String?
+  experience Int
+  isFeatured Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tutorProfileId String @unique
+  user           User   @relation(fields: [tutorProfileId], references: [id])
+
+  @@map("tutorProfiles")
 }
