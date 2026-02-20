@@ -9,7 +9,10 @@ export default function auth(...roles: UserRole[]) {
     try {
       const token = req.headers.authorization;
       if (!token) {
-        throw new Error("Token not found");
+        return res.status(401).json({
+          success: false,
+          message: "Token not found",
+        });
       }
 
       const decoded = jwt.verify(
@@ -24,15 +27,24 @@ export default function auth(...roles: UserRole[]) {
       });
 
       if (!user) {
-        throw new Error("User not found");
+        return res.status(401).json({
+          success: false,
+          message: "User not found",
+        });
       }
 
       if (user.status !== "ACTIVE") {
-        throw new Error("User is BANNED");
+        return res.status(401).json({
+          success: false,
+          message: "User is BANNED or not active",
+        });
       }
 
       if (roles.length > 0 && !roles.includes(decoded.role)) {
-        throw new Error("Unauthorized");
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden",
+        });
       }
 
       req.user = user;
