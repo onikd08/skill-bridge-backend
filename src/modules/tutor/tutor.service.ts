@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 const getAllTutors = async () => {
   const result = await prisma.tutorProfile.findMany({
     include: {
+      categories: true,
       user: {
         select: {
           name: true,
@@ -23,6 +24,7 @@ const getTutorById = async (id: string) => {
       id,
     },
     include: {
+      categories: true,
       user: {
         select: {
           name: true,
@@ -39,13 +41,7 @@ const getTutorById = async (id: string) => {
   return result;
 };
 
-const createTutorProfile = async (
-  payload: Omit<
-    TutorProfile,
-    "id" | "createdAt" | "updatedAt" | "userId" | "isFeatured"
-  >,
-  userId: string,
-) => {
+const createTutorProfile = async (payload: any, userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -56,10 +52,20 @@ const createTutorProfile = async (
     throw new Error("User not found");
   }
 
+  const { categories, ...rest } = payload;
+  if (!categories.length) {
+    throw new Error("Please select at least one category");
+  }
+
   const result = await prisma.tutorProfile.create({
     data: {
-      ...payload,
+      ...rest,
       userId,
+      categories: {
+        connect: categories.map((id: string) => ({
+          id,
+        })),
+      },
     },
     include: {
       user: {
