@@ -49,7 +49,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     expiresIn: "1d",
   });
 
-  return { user, token };
+  return { token, data: userData };
 };
 
 export const AuthService = {

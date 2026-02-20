@@ -41,7 +41,7 @@ export type TutorProfileMinAggregateOutputType = {
   isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  tutorProfileId: string | null
+  userId: string | null
 }
 
 export type TutorProfileMaxAggregateOutputType = {
@@ -51,7 +51,7 @@ export type TutorProfileMaxAggregateOutputType = {
   isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  tutorProfileId: string | null
+  userId: string | null
 }
 
 export type TutorProfileCountAggregateOutputType = {
@@ -61,7 +61,7 @@ export type TutorProfileCountAggregateOutputType = {
   isFeatured: number
   createdAt: number
   updatedAt: number
-  tutorProfileId: number
+  userId: number
   _all: number
 }
 
@@ -81,7 +81,7 @@ export type TutorProfileMinAggregateInputType = {
   isFeatured?: true
   createdAt?: true
   updatedAt?: true
-  tutorProfileId?: true
+  userId?: true
 }
 
 export type TutorProfileMaxAggregateInputType = {
@@ -91,7 +91,7 @@ export type TutorProfileMaxAggregateInputType = {
   isFeatured?: true
   createdAt?: true
   updatedAt?: true
-  tutorProfileId?: true
+  userId?: true
 }
 
 export type TutorProfileCountAggregateInputType = {
@@ -101,7 +101,7 @@ export type TutorProfileCountAggregateInputType = {
   isFeatured?: true
   createdAt?: true
   updatedAt?: true
-  tutorProfileId?: true
+  userId?: true
   _all?: true
 }
 
@@ -198,7 +198,7 @@ export type TutorProfileGroupByOutputType = {
   isFeatured: boolean
   createdAt: Date
   updatedAt: Date
-  tutorProfileId: string
+  userId: string
   _count: TutorProfileCountAggregateOutputType | null
   _avg: TutorProfileAvgAggregateOutputType | null
   _sum: TutorProfileSumAggregateOutputType | null
@@ -231,7 +231,7 @@ export type TutorProfileWhereInput = {
   isFeatured?: Prisma.BoolFilter<"TutorProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
-  tutorProfileId?: Prisma.StringFilter<"TutorProfile"> | string
+  userId?: Prisma.StringFilter<"TutorProfile"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -242,13 +242,13 @@ export type TutorProfileOrderByWithRelationInput = {
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  tutorProfileId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type TutorProfileWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  tutorProfileId?: string
+  userId?: string
   AND?: Prisma.TutorProfileWhereInput | Prisma.TutorProfileWhereInput[]
   OR?: Prisma.TutorProfileWhereInput[]
   NOT?: Prisma.TutorProfileWhereInput | Prisma.TutorProfileWhereInput[]
@@ -258,7 +258,7 @@ export type TutorProfileWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "tutorProfileId">
+}, "id" | "userId">
 
 export type TutorProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -267,7 +267,7 @@ export type TutorProfileOrderByWithAggregationInput = {
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  tutorProfileId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   _count?: Prisma.TutorProfileCountOrderByAggregateInput
   _avg?: Prisma.TutorProfileAvgOrderByAggregateInput
   _max?: Prisma.TutorProfileMaxOrderByAggregateInput
@@ -285,7 +285,7 @@ export type TutorProfileScalarWhereWithAggregatesInput = {
   isFeatured?: Prisma.BoolWithAggregatesFilter<"TutorProfile"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TutorProfile"> | Date | string
-  tutorProfileId?: Prisma.StringWithAggregatesFilter<"TutorProfile"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"TutorProfile"> | string
 }
 
 export type TutorProfileCreateInput = {
@@ -305,7 +305,7 @@ export type TutorProfileUncheckedCreateInput = {
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  tutorProfileId: string
+  userId: string
 }
 
 export type TutorProfileUpdateInput = {
@@ -325,7 +325,7 @@ export type TutorProfileUncheckedUpdateInput = {
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tutorProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TutorProfileCreateManyInput = {
@@ -335,7 +335,7 @@ export type TutorProfileCreateManyInput = {
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  tutorProfileId: string
+  userId: string
 }
 
 export type TutorProfileUpdateManyMutationInput = {
@@ -354,7 +354,7 @@ export type TutorProfileUncheckedUpdateManyInput = {
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tutorProfileId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TutorProfileNullableScalarRelationFilter = {
@@ -369,7 +369,7 @@ export type TutorProfileCountOrderByAggregateInput = {
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  tutorProfileId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type TutorProfileAvgOrderByAggregateInput = {
@@ -383,7 +383,7 @@ export type TutorProfileMaxOrderByAggregateInput = {
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  tutorProfileId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type TutorProfileMinOrderByAggregateInput = {
@@ -393,7 +393,7 @@ export type TutorProfileMinOrderByAggregateInput = {
   isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  tutorProfileId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type TutorProfileSumOrderByAggregateInput = {
@@ -509,7 +509,7 @@ export type TutorProfileSelect<ExtArgs extends runtime.Types.Extensions.Internal
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  tutorProfileId?: boolean
+  userId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tutorProfile"]>
 
@@ -520,7 +520,7 @@ export type TutorProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  tutorProfileId?: boolean
+  userId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tutorProfile"]>
 
@@ -531,7 +531,7 @@ export type TutorProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  tutorProfileId?: boolean
+  userId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tutorProfile"]>
 
@@ -542,10 +542,10 @@ export type TutorProfileSelectScalar = {
   isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  tutorProfileId?: boolean
+  userId?: boolean
 }
 
-export type TutorProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bio" | "experience" | "isFeatured" | "createdAt" | "updatedAt" | "tutorProfileId", ExtArgs["result"]["tutorProfile"]>
+export type TutorProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bio" | "experience" | "isFeatured" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["tutorProfile"]>
 export type TutorProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -568,7 +568,7 @@ export type $TutorProfilePayload<ExtArgs extends runtime.Types.Extensions.Intern
     isFeatured: boolean
     createdAt: Date
     updatedAt: Date
-    tutorProfileId: string
+    userId: string
   }, ExtArgs["result"]["tutorProfile"]>
   composites: {}
 }
@@ -999,7 +999,7 @@ export interface TutorProfileFieldRefs {
   readonly isFeatured: Prisma.FieldRef<"TutorProfile", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"TutorProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TutorProfile", 'DateTime'>
-  readonly tutorProfileId: Prisma.FieldRef<"TutorProfile", 'String'>
+  readonly userId: Prisma.FieldRef<"TutorProfile", 'String'>
 }
     
 

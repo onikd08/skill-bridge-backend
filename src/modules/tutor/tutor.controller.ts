@@ -40,7 +40,30 @@ const getTutorById = async (req: Request, res: Response) => {
   }
 };
 
+const createTutorProfile = async (req: Request, res: Response) => {
+  try {
+    const result = await TutorService.createTutorProfile(
+      req.body,
+      req.user?.id,
+    );
+    return res.status(201).json({
+      success: true,
+      message: "Tutor created successfully",
+      data: result,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Something went wrong";
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+      data: null,
+    });
+  }
+};
+
 export const TutorController = {
   getAllTutors,
   getTutorById,
+  createTutorProfile,
 };
