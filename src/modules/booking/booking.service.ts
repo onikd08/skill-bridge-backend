@@ -93,6 +93,89 @@ const createBooking = async (
   return result;
 };
 
+const getAllBookings = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      role: true,
+    },
+  });
+  if (!user) throw new Error("User not found");
+
+  let result;
+
+  const bookingInclude = {
+    availability: {
+      select: {
+        startTime: true,
+        endTime: true,
+        isBooked: true,
+        totalPrice: true,
+      },
+    },
+    student: {
+      select: {
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+      },
+    },
+    tutor: {
+      select: {
+        bio: true,
+        experience: true,
+        hourlyRate: true,
+        isFeatured: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            role: true,
+            status: true,
+          },
+        },
+      },
+    },
+  };
+
+  switch (user.role) {
+    case "ADMIN":
+      result = await prisma.booking.findMany({
+        include: bookingInclude,
+      });
+      break;
+
+    case "STUDENT":
+      result = await prisma.booking.findMany({
+        where: {
+          studentId: userId,
+        },
+        include: bookingInclude,
+      });
+      break;
+
+    case "TUTOR":
+      result = await prisma.booking.findMany({
+        where: {
+          tutor: {
+            userId,
+          },
+        },
+        include: bookingInclude,
+      });
+      break;
+
+    default:
+      break;
+  }
+
+  return result;
+};
+
 export const BookingService = {
   createBooking,
+  getAllBookings,
 };
