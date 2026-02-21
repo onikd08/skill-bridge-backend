@@ -1,8 +1,19 @@
-import { TutorProfile } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
+
+interface ITutorProfile {
+  bio?: string;
+  hourlyRate: number;
+  experience: number;
+  categories: string[];
+}
 
 const getAllTutors = async () => {
   const result = await prisma.tutorProfile.findMany({
+    where: {
+      user: {
+        status: "ACTIVE",
+      },
+    },
     include: {
       categories: true,
       user: {
@@ -41,7 +52,7 @@ const getTutorById = async (id: string) => {
   return result;
 };
 
-const createTutorProfile = async (payload: any, userId: string) => {
+const createTutorProfile = async (payload: ITutorProfile, userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -52,9 +63,30 @@ const createTutorProfile = async (payload: any, userId: string) => {
     throw new Error("User not found");
   }
 
+  const existingProfile = await prisma.tutorProfile.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  if (existingProfile) {
+    throw new Error("Tutor profile already exists");
+  }
+
   const { categories, ...rest } = payload;
-  if (!categories.length) {
+
+  if (!categories || !Array.isArray(categories) || categories.length === 0) {
     throw new Error("Please select at least one category");
+  }
+
+  const validCategories = await prisma.category.findMany({
+    where: {
+      id: { in: categories },
+    },
+  });
+
+  if (validCategories.length !== categories.length) {
+    throw new Error("One or more categories are invalid");
   }
 
   const result = await prisma.tutorProfile.create({
@@ -82,8 +114,73 @@ const createTutorProfile = async (payload: any, userId: string) => {
   return result;
 };
 
+const updateTutorProfile = async (
+  id: string,
+  payload: Partial<ITutorProfile>,
+) => {
+  const tutor = await prisma.tutorProfile.findUnique({
+    where: {
+      userId: id,
+    },
+  });
+
+  if (!tutor) {
+    throw new Error("Tutor not found");
+  }
+
+  const { categories, ...rest } = payload;
+
+  let categoryUpdate = {};
+
+  if (categories !== undefined) {
+    if (!Array.isArray(categories) || categories.length === 0) {
+      throw new Error("Please select at least one category");
+    }
+
+    const validCategories = await prisma.category.findMany({
+      where: {
+        id: { in: categories },
+      },
+    });
+
+    if (validCategories.length !== categories.length) {
+      throw new Error("One or more categories are invalid");
+    }
+
+    categoryUpdate = {
+      set: categories.map((id: string) => ({
+        id,
+      })),
+    };
+  }
+
+  const result = await prisma.tutorProfile.update({
+    where: {
+      userId: id,
+    },
+    data: {
+      ...rest,
+      categories: categoryUpdate,
+    },
+    include: {
+      categories: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 export const TutorService = {
   getAllTutors,
   getTutorById,
   createTutorProfile,
+  updateTutorProfile,
 };

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { TutorService } from "./tutor.service";
-import { success } from "zod";
 
 const getAllTutors = async (req: Request, res: Response) => {
   try {
@@ -62,8 +61,31 @@ const createTutorProfile = async (req: Request, res: Response) => {
   }
 };
 
+const updateTutorProfile = async (req: Request, res: Response) => {
+  try {
+    const result = await TutorService.updateTutorProfile(
+      req.user?.id as string,
+      req.body,
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Tutor updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Something went wrong";
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+      data: null,
+    });
+  }
+};
+
 export const TutorController = {
   getAllTutors,
   getTutorById,
   createTutorProfile,
+  updateTutorProfile,
 };
