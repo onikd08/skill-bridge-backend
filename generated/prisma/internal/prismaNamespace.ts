@@ -783,6 +783,7 @@ export const AvailabilityScalarFieldEnum = {
   id: 'id',
   startTime: 'startTime',
   endTime: 'endTime',
+  totalPrice: 'totalPrice',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   tutorId: 'tutorId'

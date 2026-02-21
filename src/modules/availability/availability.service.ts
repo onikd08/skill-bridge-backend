@@ -13,17 +13,42 @@ const createAvailableSlot = async (
   if (!tutor) {
     throw new Error("Tutor not found");
   }
-  const startTime = new Date(payload.startTime).getTime();
-  const endTime = new Date(payload.endTime).getTime();
 
-  if (endTime <= startTime) {
+  const startDate = new Date(payload.startTime);
+  const endDate = new Date(payload.endTime);
+
+  if (startDate <= new Date()) {
+    throw new Error("Start time must be in the future");
+  }
+
+  if (endDate <= startDate) {
     throw new Error("End time must be after start time");
   }
+
+  const durationInHour =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+
+  if (durationInHour < 1 || durationInHour > 3) {
+    throw new Error("Duration must be between 1 and 3 hours");
+  }
+
+  const overlapping = await prisma.availability.findFirst({
+    where: {
+      tutorId: tutor.id,
+      AND: [{ startTime: { lt: endDate } }, { endTime: { gt: startDate } }],
+    },
+  });
+
+  if (overlapping) {
+    throw new Error("Availability overlaps with existing slot");
+  }
+  const totalPrice = durationInHour * tutor.hourlyRate;
 
   const result = await prisma.availability.create({
     data: {
       tutorId: tutor.id,
       ...payload,
+      totalPrice,
     },
     include: {
       tutorProfile: {

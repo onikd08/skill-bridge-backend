@@ -68,12 +68,12 @@ model Category {
 }
 
 model Availability {
-  id        String   @id @default(uuid())
-  startTime DateTime
-  endTime   DateTime
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  startTime  DateTime
+  endTime    DateTime
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   tutorId      String
   tutorProfile TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
