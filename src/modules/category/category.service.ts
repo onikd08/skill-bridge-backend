@@ -31,12 +31,19 @@ const getCategories = async () => {
 };
 
 const deleteCategory = async (id: string) => {
+  const category = await prisma.category.findUnique({
+    where: { id },
+    include: { tutors: true },
+  });
+  if (!category) throw new Error("Category not found");
+
+  if (category.tutors.length > 0) throw new Error("Category has tutors");
+
   const result = await prisma.category.delete({
     where: {
       id,
     },
   });
-  if (!result) throw new Error("Category not found");
   return result;
 };
 

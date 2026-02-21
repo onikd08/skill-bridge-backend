@@ -58,7 +58,7 @@ model TutorProfile {
 
 model Category {
   id           String @id @default(uuid())
-  categoryName String
+  categoryName String @unique
 
   createdAt DateTime @default(now())
 

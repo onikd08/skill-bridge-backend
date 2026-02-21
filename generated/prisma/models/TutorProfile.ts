@@ -28,19 +28,19 @@ export type AggregateTutorProfile = {
 
 export type TutorProfileAvgAggregateOutputType = {
   experience: number | null
-  hourlyRate: runtime.Decimal | null
+  hourlyRate: number | null
 }
 
 export type TutorProfileSumAggregateOutputType = {
   experience: number | null
-  hourlyRate: runtime.Decimal | null
+  hourlyRate: number | null
 }
 
 export type TutorProfileMinAggregateOutputType = {
   id: string | null
   bio: string | null
   experience: number | null
-  hourlyRate: runtime.Decimal | null
+  hourlyRate: number | null
   isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -51,7 +51,7 @@ export type TutorProfileMaxAggregateOutputType = {
   id: string | null
   bio: string | null
   experience: number | null
-  hourlyRate: runtime.Decimal | null
+  hourlyRate: number | null
   isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -205,7 +205,7 @@ export type TutorProfileGroupByOutputType = {
   id: string
   bio: string | null
   experience: number
-  hourlyRate: runtime.Decimal
+  hourlyRate: number
   isFeatured: boolean
   createdAt: Date
   updatedAt: Date
@@ -239,7 +239,7 @@ export type TutorProfileWhereInput = {
   id?: Prisma.StringFilter<"TutorProfile"> | string
   bio?: Prisma.StringNullableFilter<"TutorProfile"> | string | null
   experience?: Prisma.IntFilter<"TutorProfile"> | number
-  hourlyRate?: Prisma.DecimalFilter<"TutorProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFilter<"TutorProfile"> | number
   isFeatured?: Prisma.BoolFilter<"TutorProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
@@ -271,7 +271,7 @@ export type TutorProfileWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TutorProfileWhereInput | Prisma.TutorProfileWhereInput[]
   bio?: Prisma.StringNullableFilter<"TutorProfile"> | string | null
   experience?: Prisma.IntFilter<"TutorProfile"> | number
-  hourlyRate?: Prisma.DecimalFilter<"TutorProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFilter<"TutorProfile"> | number
   isFeatured?: Prisma.BoolFilter<"TutorProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
@@ -303,7 +303,7 @@ export type TutorProfileScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"TutorProfile"> | string
   bio?: Prisma.StringNullableWithAggregatesFilter<"TutorProfile"> | string | null
   experience?: Prisma.IntWithAggregatesFilter<"TutorProfile"> | number
-  hourlyRate?: Prisma.DecimalWithAggregatesFilter<"TutorProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatWithAggregatesFilter<"TutorProfile"> | number
   isFeatured?: Prisma.BoolWithAggregatesFilter<"TutorProfile"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TutorProfile"> | Date | string
@@ -314,7 +314,7 @@ export type TutorProfileCreateInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -327,7 +327,7 @@ export type TutorProfileUncheckedCreateInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -340,7 +340,7 @@ export type TutorProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -353,7 +353,7 @@ export type TutorProfileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,7 +366,7 @@ export type TutorProfileCreateManyInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -377,7 +377,7 @@ export type TutorProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,7 +387,7 @@ export type TutorProfileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -501,12 +501,12 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -569,7 +569,7 @@ export type TutorProfileCreateWithoutUserInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -581,7 +581,7 @@ export type TutorProfileUncheckedCreateWithoutUserInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -609,7 +609,7 @@ export type TutorProfileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -621,7 +621,7 @@ export type TutorProfileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -633,7 +633,7 @@ export type TutorProfileCreateWithoutCategoriesInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -645,7 +645,7 @@ export type TutorProfileUncheckedCreateWithoutCategoriesInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -681,7 +681,7 @@ export type TutorProfileScalarWhereInput = {
   id?: Prisma.StringFilter<"TutorProfile"> | string
   bio?: Prisma.StringNullableFilter<"TutorProfile"> | string | null
   experience?: Prisma.IntFilter<"TutorProfile"> | number
-  hourlyRate?: Prisma.DecimalFilter<"TutorProfile"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFilter<"TutorProfile"> | number
   isFeatured?: Prisma.BoolFilter<"TutorProfile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorProfile"> | Date | string
@@ -692,7 +692,7 @@ export type TutorProfileCreateWithoutAvailabilityInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -704,7 +704,7 @@ export type TutorProfileUncheckedCreateWithoutAvailabilityInput = {
   id?: string
   bio?: string | null
   experience: number
-  hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate: number
   isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -732,7 +732,7 @@ export type TutorProfileUpdateWithoutAvailabilityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -744,7 +744,7 @@ export type TutorProfileUncheckedUpdateWithoutAvailabilityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -756,7 +756,7 @@ export type TutorProfileUpdateWithoutCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -768,7 +768,7 @@ export type TutorProfileUncheckedUpdateWithoutCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -780,7 +780,7 @@ export type TutorProfileUncheckedUpdateManyWithoutCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   experience?: Prisma.IntFieldUpdateOperationsInput | number
-  hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  hourlyRate?: Prisma.FloatFieldUpdateOperationsInput | number
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -902,7 +902,7 @@ export type $TutorProfilePayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     bio: string | null
     experience: number
-    hourlyRate: runtime.Decimal
+    hourlyRate: number
     isFeatured: boolean
     createdAt: Date
     updatedAt: Date
@@ -1336,7 +1336,7 @@ export interface TutorProfileFieldRefs {
   readonly id: Prisma.FieldRef<"TutorProfile", 'String'>
   readonly bio: Prisma.FieldRef<"TutorProfile", 'String'>
   readonly experience: Prisma.FieldRef<"TutorProfile", 'Int'>
-  readonly hourlyRate: Prisma.FieldRef<"TutorProfile", 'Decimal'>
+  readonly hourlyRate: Prisma.FieldRef<"TutorProfile", 'Float'>
   readonly isFeatured: Prisma.FieldRef<"TutorProfile", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"TutorProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TutorProfile", 'DateTime'>
