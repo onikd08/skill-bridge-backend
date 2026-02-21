@@ -40,8 +40,6 @@ const createBooking = async (
       ...payload,
     };
 
-    const booking = await tx.booking.create({ data: bookingData });
-
     await tx.availability.update({
       where: {
         id: availabilityId,
@@ -50,6 +48,45 @@ const createBooking = async (
         isBooked: true,
       },
     });
+
+    const booking = await tx.booking.create({
+      data: bookingData,
+      include: {
+        availability: {
+          select: {
+            startTime: true,
+            endTime: true,
+            isBooked: true,
+            totalPrice: true,
+          },
+        },
+        student: {
+          select: {
+            name: true,
+            email: true,
+            role: true,
+            status: true,
+          },
+        },
+        tutor: {
+          select: {
+            bio: true,
+            experience: true,
+            hourlyRate: true,
+            isFeatured: true,
+            user: {
+              select: {
+                name: true,
+                email: true,
+                role: true,
+                status: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
     return booking;
   });
 

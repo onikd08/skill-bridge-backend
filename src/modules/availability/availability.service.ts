@@ -156,8 +156,39 @@ const getAllAvailableTimeSlots = async () => {
   return result;
 };
 
+const getAvailableTimeSlotById = async (id: string) => {
+  const result = await prisma.availability.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      tutorProfile: {
+        select: {
+          bio: true,
+          experience: true,
+          hourlyRate: true,
+          isFeatured: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              role: true,
+              status: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!result) {
+    throw new Error("Availability not found");
+  }
+  return result;
+};
+
 export const AvailabilityService = {
   createAvailableSlot,
   getAvailableTimeSlots,
   getAllAvailableTimeSlots,
+  getAvailableTimeSlotById,
 };

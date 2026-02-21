@@ -23,4 +23,6 @@ router.get(
   AvailabilityController.getAllAvailableTimeSlots,
 );
 
+router.get("/:id", AvailabilityController.getAvailableTimeSlotById);
+
 export const AvailabilityRoutes = router;

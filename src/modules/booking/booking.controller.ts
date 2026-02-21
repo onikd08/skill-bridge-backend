@@ -5,7 +5,6 @@ const createBooking = async (req: Request, res: Response) => {
   try {
     const studentId = req.user?.id as string;
     const availabilityId = req.params.id as string;
-    console.log(studentId, availabilityId);
     const result = await BookingService.createBooking(
       studentId,
       availabilityId,
