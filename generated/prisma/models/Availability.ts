@@ -41,6 +41,7 @@ export type AvailabilityMinAggregateOutputType = {
   totalPrice: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  isBooked: boolean | null
   tutorId: string | null
 }
 
@@ -51,6 +52,7 @@ export type AvailabilityMaxAggregateOutputType = {
   totalPrice: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  isBooked: boolean | null
   tutorId: string | null
 }
 
@@ -61,6 +63,7 @@ export type AvailabilityCountAggregateOutputType = {
   totalPrice: number
   createdAt: number
   updatedAt: number
+  isBooked: number
   tutorId: number
   _all: number
 }
@@ -81,6 +84,7 @@ export type AvailabilityMinAggregateInputType = {
   totalPrice?: true
   createdAt?: true
   updatedAt?: true
+  isBooked?: true
   tutorId?: true
 }
 
@@ -91,6 +95,7 @@ export type AvailabilityMaxAggregateInputType = {
   totalPrice?: true
   createdAt?: true
   updatedAt?: true
+  isBooked?: true
   tutorId?: true
 }
 
@@ -101,6 +106,7 @@ export type AvailabilityCountAggregateInputType = {
   totalPrice?: true
   createdAt?: true
   updatedAt?: true
+  isBooked?: true
   tutorId?: true
   _all?: true
 }
@@ -198,6 +204,7 @@ export type AvailabilityGroupByOutputType = {
   totalPrice: number
   createdAt: Date
   updatedAt: Date
+  isBooked: boolean
   tutorId: string
   _count: AvailabilityCountAggregateOutputType | null
   _avg: AvailabilityAvgAggregateOutputType | null
@@ -231,6 +238,7 @@ export type AvailabilityWhereInput = {
   totalPrice?: Prisma.FloatFilter<"Availability"> | number
   createdAt?: Prisma.DateTimeFilter<"Availability"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Availability"> | Date | string
+  isBooked?: Prisma.BoolFilter<"Availability"> | boolean
   tutorId?: Prisma.StringFilter<"Availability"> | string
   tutorProfile?: Prisma.XOR<Prisma.TutorProfileScalarRelationFilter, Prisma.TutorProfileWhereInput>
   booking?: Prisma.XOR<Prisma.BookingNullableScalarRelationFilter, Prisma.BookingWhereInput> | null
@@ -243,6 +251,7 @@ export type AvailabilityOrderByWithRelationInput = {
   totalPrice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isBooked?: Prisma.SortOrder
   tutorId?: Prisma.SortOrder
   tutorProfile?: Prisma.TutorProfileOrderByWithRelationInput
   booking?: Prisma.BookingOrderByWithRelationInput
@@ -258,6 +267,7 @@ export type AvailabilityWhereUniqueInput = Prisma.AtLeast<{
   totalPrice?: Prisma.FloatFilter<"Availability"> | number
   createdAt?: Prisma.DateTimeFilter<"Availability"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Availability"> | Date | string
+  isBooked?: Prisma.BoolFilter<"Availability"> | boolean
   tutorId?: Prisma.StringFilter<"Availability"> | string
   tutorProfile?: Prisma.XOR<Prisma.TutorProfileScalarRelationFilter, Prisma.TutorProfileWhereInput>
   booking?: Prisma.XOR<Prisma.BookingNullableScalarRelationFilter, Prisma.BookingWhereInput> | null
@@ -270,6 +280,7 @@ export type AvailabilityOrderByWithAggregationInput = {
   totalPrice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isBooked?: Prisma.SortOrder
   tutorId?: Prisma.SortOrder
   _count?: Prisma.AvailabilityCountOrderByAggregateInput
   _avg?: Prisma.AvailabilityAvgOrderByAggregateInput
@@ -288,6 +299,7 @@ export type AvailabilityScalarWhereWithAggregatesInput = {
   totalPrice?: Prisma.FloatWithAggregatesFilter<"Availability"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Availability"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Availability"> | Date | string
+  isBooked?: Prisma.BoolWithAggregatesFilter<"Availability"> | boolean
   tutorId?: Prisma.StringWithAggregatesFilter<"Availability"> | string
 }
 
@@ -298,6 +310,7 @@ export type AvailabilityCreateInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   tutorProfile: Prisma.TutorProfileCreateNestedOneWithoutAvailabilityInput
   booking?: Prisma.BookingCreateNestedOneWithoutAvailabilityInput
 }
@@ -309,6 +322,7 @@ export type AvailabilityUncheckedCreateInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   tutorId: string
   booking?: Prisma.BookingUncheckedCreateNestedOneWithoutAvailabilityInput
 }
@@ -320,6 +334,7 @@ export type AvailabilityUpdateInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tutorProfile?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilityNestedInput
   booking?: Prisma.BookingUpdateOneWithoutAvailabilityNestedInput
 }
@@ -331,6 +346,7 @@ export type AvailabilityUncheckedUpdateInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tutorId?: Prisma.StringFieldUpdateOperationsInput | string
   booking?: Prisma.BookingUncheckedUpdateOneWithoutAvailabilityNestedInput
 }
@@ -342,6 +358,7 @@ export type AvailabilityCreateManyInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   tutorId: string
 }
 
@@ -352,6 +369,7 @@ export type AvailabilityUpdateManyMutationInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type AvailabilityUncheckedUpdateManyInput = {
@@ -361,6 +379,7 @@ export type AvailabilityUncheckedUpdateManyInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tutorId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -381,6 +400,7 @@ export type AvailabilityCountOrderByAggregateInput = {
   totalPrice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isBooked?: Prisma.SortOrder
   tutorId?: Prisma.SortOrder
 }
 
@@ -395,6 +415,7 @@ export type AvailabilityMaxOrderByAggregateInput = {
   totalPrice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isBooked?: Prisma.SortOrder
   tutorId?: Prisma.SortOrder
 }
 
@@ -405,6 +426,7 @@ export type AvailabilityMinOrderByAggregateInput = {
   totalPrice?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  isBooked?: Prisma.SortOrder
   tutorId?: Prisma.SortOrder
 }
 
@@ -480,6 +502,7 @@ export type AvailabilityCreateWithoutTutorProfileInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   booking?: Prisma.BookingCreateNestedOneWithoutAvailabilityInput
 }
 
@@ -490,6 +513,7 @@ export type AvailabilityUncheckedCreateWithoutTutorProfileInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   booking?: Prisma.BookingUncheckedCreateNestedOneWithoutAvailabilityInput
 }
 
@@ -529,6 +553,7 @@ export type AvailabilityScalarWhereInput = {
   totalPrice?: Prisma.FloatFilter<"Availability"> | number
   createdAt?: Prisma.DateTimeFilter<"Availability"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Availability"> | Date | string
+  isBooked?: Prisma.BoolFilter<"Availability"> | boolean
   tutorId?: Prisma.StringFilter<"Availability"> | string
 }
 
@@ -539,6 +564,7 @@ export type AvailabilityCreateWithoutBookingInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   tutorProfile: Prisma.TutorProfileCreateNestedOneWithoutAvailabilityInput
 }
 
@@ -549,6 +575,7 @@ export type AvailabilityUncheckedCreateWithoutBookingInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
   tutorId: string
 }
 
@@ -575,6 +602,7 @@ export type AvailabilityUpdateWithoutBookingInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tutorProfile?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilityNestedInput
 }
 
@@ -585,6 +613,7 @@ export type AvailabilityUncheckedUpdateWithoutBookingInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tutorId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -595,6 +624,7 @@ export type AvailabilityCreateManyTutorProfileInput = {
   totalPrice: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  isBooked?: boolean
 }
 
 export type AvailabilityUpdateWithoutTutorProfileInput = {
@@ -604,6 +634,7 @@ export type AvailabilityUpdateWithoutTutorProfileInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   booking?: Prisma.BookingUpdateOneWithoutAvailabilityNestedInput
 }
 
@@ -614,6 +645,7 @@ export type AvailabilityUncheckedUpdateWithoutTutorProfileInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   booking?: Prisma.BookingUncheckedUpdateOneWithoutAvailabilityNestedInput
 }
 
@@ -624,6 +656,7 @@ export type AvailabilityUncheckedUpdateManyWithoutTutorProfileInput = {
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -635,6 +668,7 @@ export type AvailabilitySelect<ExtArgs extends runtime.Types.Extensions.Internal
   totalPrice?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  isBooked?: boolean
   tutorId?: boolean
   tutorProfile?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
   booking?: boolean | Prisma.Availability$bookingArgs<ExtArgs>
@@ -647,6 +681,7 @@ export type AvailabilitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   totalPrice?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  isBooked?: boolean
   tutorId?: boolean
   tutorProfile?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["availability"]>
@@ -658,6 +693,7 @@ export type AvailabilitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   totalPrice?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  isBooked?: boolean
   tutorId?: boolean
   tutorProfile?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["availability"]>
@@ -669,10 +705,11 @@ export type AvailabilitySelectScalar = {
   totalPrice?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  isBooked?: boolean
   tutorId?: boolean
 }
 
-export type AvailabilityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "endTime" | "totalPrice" | "createdAt" | "updatedAt" | "tutorId", ExtArgs["result"]["availability"]>
+export type AvailabilityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "endTime" | "totalPrice" | "createdAt" | "updatedAt" | "isBooked" | "tutorId", ExtArgs["result"]["availability"]>
 export type AvailabilityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tutorProfile?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
   booking?: boolean | Prisma.Availability$bookingArgs<ExtArgs>
@@ -697,6 +734,7 @@ export type $AvailabilityPayload<ExtArgs extends runtime.Types.Extensions.Intern
     totalPrice: number
     createdAt: Date
     updatedAt: Date
+    isBooked: boolean
     tutorId: string
   }, ExtArgs["result"]["availability"]>
   composites: {}
@@ -1129,6 +1167,7 @@ export interface AvailabilityFieldRefs {
   readonly totalPrice: Prisma.FieldRef<"Availability", 'Float'>
   readonly createdAt: Prisma.FieldRef<"Availability", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Availability", 'DateTime'>
+  readonly isBooked: Prisma.FieldRef<"Availability", 'Boolean'>
   readonly tutorId: Prisma.FieldRef<"Availability", 'String'>
 }
     

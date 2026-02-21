@@ -81,6 +81,7 @@ model Availability {
   totalPrice Float
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  isBooked   Boolean  @default(false)
 
   tutorId      String
   tutorProfile TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
@@ -95,6 +96,8 @@ model Booking {
   tutorId        String
   studentId      String
   availabilityId String @unique
+
+  createdAt DateTime @default(now())
 
   tutor        TutorProfile @relation(fields: [tutorId], references: [id])
   student      User         @relation(fields: [studentId], references: [id])
