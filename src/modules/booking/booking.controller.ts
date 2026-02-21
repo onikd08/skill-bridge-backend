@@ -45,7 +45,30 @@ const getAllBookings = async (req: Request, res: Response) => {
   }
 };
 
+const getBookingById = async (req: Request, res: Response) => {
+  try {
+    const result = await BookingService.getBookingById(
+      req.params.id as string,
+      req.user?.id as string,
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Booking fetched successfully",
+      data: result,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Something went wrong";
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+      data: null,
+    });
+  }
+};
+
 export const BookingController = {
   createBooking,
   getAllBookings,
+  getBookingById,
 };

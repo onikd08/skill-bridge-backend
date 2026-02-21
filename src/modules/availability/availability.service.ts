@@ -5,7 +5,7 @@ const createAvailableSlot = async (
   payload: Omit<Availability, "id" | "createdAt" | "updatedAt" | "tutorId">,
   userId: string,
 ) => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
       id: userId,
       role: "TUTOR",
@@ -14,7 +14,7 @@ const createAvailableSlot = async (
   });
 
   if (!user) {
-    throw new Error("User is not active");
+    throw new Error("User is not active or not found");
   }
 
   const tutor = await prisma.tutorProfile.findUnique({

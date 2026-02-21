@@ -1,5 +1,39 @@
 import { prisma } from "../../lib/prisma";
 
+const bookingInclude = {
+  availability: {
+    select: {
+      startTime: true,
+      endTime: true,
+      isBooked: true,
+      totalPrice: true,
+    },
+  },
+  student: {
+    select: {
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+    },
+  },
+  tutor: {
+    select: {
+      bio: true,
+      experience: true,
+      hourlyRate: true,
+      isFeatured: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
+    },
+  },
+};
 const createBooking = async (
   studentId: string,
   availabilityId: string,
@@ -8,7 +42,7 @@ const createBooking = async (
   },
 ) => {
   const result = await prisma.$transaction(async (tx) => {
-    const student = await tx.user.findUnique({
+    const student = await tx.user.findFirst({
       where: {
         id: studentId,
         role: "STUDENT",
@@ -51,40 +85,7 @@ const createBooking = async (
 
     const booking = await tx.booking.create({
       data: bookingData,
-      include: {
-        availability: {
-          select: {
-            startTime: true,
-            endTime: true,
-            isBooked: true,
-            totalPrice: true,
-          },
-        },
-        student: {
-          select: {
-            name: true,
-            email: true,
-            role: true,
-            status: true,
-          },
-        },
-        tutor: {
-          select: {
-            bio: true,
-            experience: true,
-            hourlyRate: true,
-            isFeatured: true,
-            user: {
-              select: {
-                name: true,
-                email: true,
-                role: true,
-                status: true,
-              },
-            },
-          },
-        },
-      },
+      include: bookingInclude,
     });
 
     return booking;
@@ -105,41 +106,6 @@ const getAllBookings = async (userId: string) => {
   if (!user) throw new Error("User not found");
 
   let result;
-
-  const bookingInclude = {
-    availability: {
-      select: {
-        startTime: true,
-        endTime: true,
-        isBooked: true,
-        totalPrice: true,
-      },
-    },
-    student: {
-      select: {
-        name: true,
-        email: true,
-        role: true,
-        status: true,
-      },
-    },
-    tutor: {
-      select: {
-        bio: true,
-        experience: true,
-        hourlyRate: true,
-        isFeatured: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-            role: true,
-            status: true,
-          },
-        },
-      },
-    },
-  };
 
   switch (user.role) {
     case "ADMIN":
@@ -175,7 +141,53 @@ const getAllBookings = async (userId: string) => {
   return result;
 };
 
+const getBookingById = async (id: string, userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  if (!user) throw new Error("User not found");
+
+  let booking;
+
+  if (user.role === "ADMIN") {
+    booking = await prisma.booking.findUnique({
+      where: { id },
+      include: bookingInclude,
+    });
+  }
+
+  if (user.role === "STUDENT") {
+    booking = await prisma.booking.findFirst({
+      where: {
+        id,
+        studentId: userId,
+      },
+      include: bookingInclude,
+    });
+  }
+
+  if (user.role === "TUTOR") {
+    booking = await prisma.booking.findFirst({
+      where: {
+        id,
+        tutor: {
+          userId: userId,
+        },
+      },
+      include: bookingInclude,
+    });
+  }
+
+  if (!booking) {
+    throw new Error("Booking not found or access denied");
+  }
+
+  return booking;
+};
 export const BookingService = {
   createBooking,
   getAllBookings,
+  getBookingById,
 };
