@@ -2,6 +2,12 @@ import { Category } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const createCategory = async (payload: Omit<Category, "id" | "createdAt">) => {
+  const category = await prisma.category.findUnique({
+    where: { categoryName: payload.categoryName },
+  });
+
+  if (category) throw new Error("Category already exists");
+
   const result = await prisma.category.create({ data: payload });
   return result;
 };
