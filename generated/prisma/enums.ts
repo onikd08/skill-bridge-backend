@@ -24,3 +24,11 @@ export const UserStatus = {
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const BookingStatus = {
+  CONFIREMED: 'CONFIREMED',
+  CANCELED: 'CANCELED'
+} as const
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]

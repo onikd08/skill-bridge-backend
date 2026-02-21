@@ -54,7 +54,8 @@ export const ModelName = {
   User: 'User',
   TutorProfile: 'TutorProfile',
   Category: 'Category',
-  Availability: 'Availability'
+  Availability: 'Availability',
+  Booking: 'Booking'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -121,6 +122,18 @@ export const AvailabilityScalarFieldEnum = {
 } as const
 
 export type AvailabilityScalarFieldEnum = (typeof AvailabilityScalarFieldEnum)[keyof typeof AvailabilityScalarFieldEnum]
+
+
+export const BookingScalarFieldEnum = {
+  id: 'id',
+  notes: 'notes',
+  status: 'status',
+  tutorId: 'tutorId',
+  studentId: 'studentId',
+  availabilityId: 'availabilityId'
+} as const
+
+export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
 
 
 export const SortOrder = {

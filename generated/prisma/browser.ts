@@ -37,3 +37,8 @@ export type Category = Prisma.CategoryModel
  * 
  */
 export type Availability = Prisma.AvailabilityModel
+/**
+ * Model Booking
+ * 
+ */
+export type Booking = Prisma.BookingModel

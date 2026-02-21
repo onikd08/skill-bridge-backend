@@ -18,6 +18,11 @@ enum UserStatus {
   BANNED
 }
 
+enum BookingStatus {
+  CONFIREMED
+  CANCELED
+}
+
 model User {
   id       String     @id @default(uuid())
   email    String     @unique
@@ -30,6 +35,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   tutorProfile TutorProfile?
+  bookings     Booking[]
 
   @@index([role])
   @@index([status])
@@ -52,6 +58,7 @@ model TutorProfile {
 
   availability Availability[]
   categories   Category[]     @relation("TutorCategories")
+  bookings     Booking[]
 
   @@map("tutorProfiles")
 }
@@ -77,4 +84,19 @@ model Availability {
 
   tutorId      String
   tutorProfile TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  booking      Booking?
+}
+
+model Booking {
+  id     String        @id @default(uuid())
+  notes  String?
+  status BookingStatus @default(CONFIREMED)
+
+  tutorId        String
+  studentId      String
+  availabilityId String @unique
+
+  tutor        TutorProfile @relation(fields: [tutorId], references: [id])
+  student      User         @relation(fields: [studentId], references: [id])
+  availability Availability @relation(fields: [availabilityId], references: [id])
 }
