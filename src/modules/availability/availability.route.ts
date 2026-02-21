@@ -11,4 +11,16 @@ router.post(
   AvailabilityController.createAvailableSlot,
 );
 
+router.get(
+  "/",
+  auth(UserRole.TUTOR),
+  AvailabilityController.getAvailableTimeSlots,
+);
+
+router.get(
+  "/all",
+  auth(UserRole.ADMIN),
+  AvailabilityController.getAllAvailableTimeSlots,
+);
+
 export const AvailabilityRoutes = router;

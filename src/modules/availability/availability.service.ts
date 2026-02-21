@@ -5,11 +5,24 @@ const createAvailableSlot = async (
   payload: Omit<Availability, "id" | "createdAt" | "updatedAt" | "tutorId">,
   userId: string,
 ) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+      role: "TUTOR",
+      status: "ACTIVE",
+    },
+  });
+
+  if (!user) {
+    throw new Error("User is not active");
+  }
+
   const tutor = await prisma.tutorProfile.findUnique({
     where: {
       userId,
     },
   });
+
   if (!tutor) {
     throw new Error("Tutor not found");
   }
@@ -72,6 +85,79 @@ const createAvailableSlot = async (
   return result;
 };
 
+const getAvailableTimeSlots = async (userId: string) => {
+  const tutor = await prisma.tutorProfile.findUnique({
+    where: {
+      userId,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  if (!tutor) {
+    throw new Error("Tutor not found");
+  }
+
+  const result = await prisma.availability.findMany({
+    where: {
+      tutorId: tutor.id,
+    },
+    include: {
+      tutorProfile: {
+        select: {
+          bio: true,
+          experience: true,
+          hourlyRate: true,
+          isFeatured: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              role: true,
+              status: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return result;
+};
+
+const getAllAvailableTimeSlots = async () => {
+  const result = await prisma.availability.findMany({
+    include: {
+      tutorProfile: {
+        select: {
+          bio: true,
+          experience: true,
+          hourlyRate: true,
+          isFeatured: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              role: true,
+              status: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return result;
+};
+
 export const AvailabilityService = {
   createAvailableSlot,
+  getAvailableTimeSlots,
+  getAllAvailableTimeSlots,
 };
