@@ -7,7 +7,7 @@ interface ITutorProfile {
   categories: string[];
 }
 
-const getAllTutors = async () => {
+const getAllActiveTutors = async () => {
   const result = await prisma.tutorProfile.findMany({
     where: {
       user: {
@@ -16,6 +16,7 @@ const getAllTutors = async () => {
     },
     include: {
       categories: true,
+      reviews: true,
       user: {
         select: {
           name: true,
@@ -36,6 +37,7 @@ const getTutorById = async (id: string) => {
     },
     include: {
       categories: true,
+      reviews: true,
       user: {
         select: {
           name: true,
@@ -178,9 +180,43 @@ const updateTutorProfile = async (
   return result;
 };
 
+const updateTutorIsFeatured = async (tutorId: string) => {
+  const result = await prisma.$transaction(async (tx) => {
+    const tutor = await tx.tutorProfile.findUnique({
+      where: {
+        id: tutorId,
+      },
+    });
+
+    if (!tutor) {
+      throw new Error("Tutor not found");
+    }
+
+    return await tx.tutorProfile.update({
+      where: {
+        id: tutorId,
+      },
+      data: {
+        isFeatured: !tutor.isFeatured,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  });
+
+  return result;
+};
+
 export const TutorService = {
-  getAllTutors,
+  getAllActiveTutors,
   getTutorById,
   createTutorProfile,
   updateTutorProfile,
+  updateTutorIsFeatured,
 };

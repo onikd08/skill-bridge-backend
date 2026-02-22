@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { TutorService } from "./tutor.service";
 
-const getAllTutors = async (req: Request, res: Response) => {
+const getAllActiveTutors = async (req: Request, res: Response) => {
   try {
-    const result = await TutorService.getAllTutors();
+    const result = await TutorService.getAllActiveTutors();
     return res.status(200).json({
       success: true,
       message: "Tutors fetched successfully",
@@ -83,9 +83,31 @@ const updateTutorProfile = async (req: Request, res: Response) => {
   }
 };
 
+const updateTutorIsFeatured = async (req: Request, res: Response) => {
+  try {
+    const result = await TutorService.updateTutorIsFeatured(
+      req.params.tutorId as string,
+    );
+    return res.status(200).json({
+      success: true,
+      message: "IsFeatured updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Something went wrong";
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+      data: null,
+    });
+  }
+};
+
 export const TutorController = {
-  getAllTutors,
+  getAllActiveTutors,
   getTutorById,
   createTutorProfile,
   updateTutorProfile,
+  updateTutorIsFeatured,
 };
