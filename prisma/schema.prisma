@@ -93,6 +93,7 @@ model Availability {
   booking      Booking?
 
   @@index([tutorId])
+  @@map("availabilities")
 }
 
 model Booking {
@@ -113,6 +114,7 @@ model Booking {
 
   @@index([studentId])
   @@index([tutorId])
+  @@map("bookings")
 }
 
 model Review {
@@ -132,4 +134,5 @@ model Review {
 
   @@index([tutorId])
   @@index([studentId])
+  @@map("reviews")
 }
