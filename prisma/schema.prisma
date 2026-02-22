@@ -19,8 +19,9 @@ enum UserStatus {
 }
 
 enum BookingStatus {
-  CONFIREMED
+  CONFIRMED
   CANCELED
+  COMPLETED
 }
 
 model User {
@@ -36,6 +37,7 @@ model User {
 
   tutorProfile TutorProfile?
   bookings     Booking[]
+  reviews      Review[]
 
   @@index([role])
   @@index([status])
@@ -48,7 +50,9 @@ model TutorProfile {
   experience Int
   hourlyRate Float
 
-  isFeatured Boolean @default(false)
+  isFeatured    Boolean @default(false)
+  totalReviews  Int     @default(0)
+  averageRating Float   @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,6 +63,7 @@ model TutorProfile {
   availability Availability[]
   categories   Category[]     @relation("TutorCategories")
   bookings     Booking[]
+  reviews      Review[]
 
   @@map("tutorProfiles")
 }
@@ -86,12 +91,14 @@ model Availability {
   tutorId      String
   tutorProfile TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
   booking      Booking?
+
+  @@index([tutorId])
 }
 
 model Booking {
   id     String        @id @default(uuid())
   notes  String?
-  status BookingStatus @default(CONFIREMED)
+  status BookingStatus @default(CONFIRMED)
 
   tutorId        String
   studentId      String
@@ -99,7 +106,30 @@ model Booking {
 
   createdAt DateTime @default(now())
 
-  tutor        TutorProfile @relation(fields: [tutorId], references: [id])
-  student      User         @relation(fields: [studentId], references: [id])
-  availability Availability @relation(fields: [availabilityId], references: [id])
+  tutor        TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  student      User         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  availability Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
+  review       Review?
+
+  @@index([studentId])
+  @@index([tutorId])
+}
+
+model Review {
+  id      String  @id @default(uuid())
+  rating  Int
+  comment String?
+
+  createdAt DateTime @default(now())
+
+  studentId String
+  tutorId   String
+  bookingId String @unique
+
+  student User         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tutor   TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  booking Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([tutorId])
+  @@index([studentId])
 }
