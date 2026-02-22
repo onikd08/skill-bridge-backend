@@ -4,6 +4,7 @@ import { TutorRoutes } from "../modules/tutor/tutor.route";
 import { CategoryRoutes } from "../modules/category/category.route";
 import { AvailabilityRoutes } from "../modules/availability/availability.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
+import { ReviewRoutes } from "../modules/review/review.route";
 
 const router = Router();
 
@@ -27,6 +28,10 @@ const routerManager = [
   {
     path: "/bookings",
     route: BookingRoutes,
+  },
+  {
+    path: "/reviews",
+    route: ReviewRoutes,
   },
 ];
 
