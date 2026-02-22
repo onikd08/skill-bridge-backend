@@ -7,6 +7,18 @@ interface ITutorProfile {
   categories: string[];
 }
 
+const includeTutor = {
+  categories: true,
+  reviews: true,
+  user: {
+    select: {
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+    },
+  },
+};
 const getAllActiveTutors = async () => {
   const result = await prisma.tutorProfile.findMany({
     where: {
@@ -14,18 +26,14 @@ const getAllActiveTutors = async () => {
         status: "ACTIVE",
       },
     },
-    include: {
-      categories: true,
-      reviews: true,
-      user: {
-        select: {
-          name: true,
-          email: true,
-          role: true,
-          status: true,
-        },
-      },
-    },
+    include: includeTutor,
+  });
+  return result;
+};
+
+const getAllTutors = async () => {
+  const result = await prisma.tutorProfile.findMany({
+    include: includeTutor,
   });
   return result;
 };
@@ -35,18 +43,7 @@ const getTutorById = async (id: string) => {
     where: {
       id,
     },
-    include: {
-      categories: true,
-      reviews: true,
-      user: {
-        select: {
-          name: true,
-          email: true,
-          role: true,
-          status: true,
-        },
-      },
-    },
+    include: includeTutor,
   });
   if (!result) {
     throw new Error("Tutor not found");
@@ -101,16 +98,7 @@ const createTutorProfile = async (payload: ITutorProfile, userId: string) => {
         })),
       },
     },
-    include: {
-      user: {
-        select: {
-          name: true,
-          email: true,
-          role: true,
-          status: true,
-        },
-      },
-    },
+    include: includeTutor,
   });
 
   return result;
@@ -164,17 +152,7 @@ const updateTutorProfile = async (
       ...rest,
       categories: categoryUpdate,
     },
-    include: {
-      categories: true,
-      user: {
-        select: {
-          name: true,
-          email: true,
-          role: true,
-          status: true,
-        },
-      },
-    },
+    include: includeTutor,
   });
 
   return result;
@@ -199,14 +177,7 @@ const updateTutorIsFeatured = async (tutorId: string) => {
       data: {
         isFeatured: !tutor.isFeatured,
       },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-      },
+      include: includeTutor,
     });
   });
 
@@ -219,4 +190,5 @@ export const TutorService = {
   createTutorProfile,
   updateTutorProfile,
   updateTutorIsFeatured,
+  getAllTutors,
 };
