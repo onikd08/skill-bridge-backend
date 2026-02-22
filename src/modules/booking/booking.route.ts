@@ -5,17 +5,26 @@ import { UserRole } from "../../../generated/prisma/enums";
 
 const router = express.Router();
 
-//availabilityId
-router.post("/:id", auth(UserRole.STUDENT), BookingController.createBooking);
+router.post(
+  "/availability/:availabilityId",
+  auth(UserRole.STUDENT),
+  BookingController.createBooking,
+);
+
+router.post(
+  "/:bookingId/review",
+  auth(UserRole.STUDENT),
+  BookingController.createReview,
+);
+
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
   BookingController.getAllBookings,
 );
 
-//bookingId
 router.get(
-  "/:id",
+  "/:bookingId",
   auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
   BookingController.getBookingById,
 );

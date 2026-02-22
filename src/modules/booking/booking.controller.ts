@@ -4,7 +4,7 @@ import { BookingService } from "./booking.service";
 const createBooking = async (req: Request, res: Response) => {
   try {
     const studentId = req.user?.id as string;
-    const availabilityId = req.params.id as string;
+    const availabilityId = req.params.availabilityId as string;
     const result = await BookingService.createBooking(
       studentId,
       availabilityId,
@@ -48,7 +48,7 @@ const getAllBookings = async (req: Request, res: Response) => {
 const getBookingById = async (req: Request, res: Response) => {
   try {
     const result = await BookingService.getBookingById(
-      req.params.id as string,
+      req.params.bookingId as string,
       req.user?.id as string,
     );
     return res.status(200).json({
@@ -67,8 +67,32 @@ const getBookingById = async (req: Request, res: Response) => {
   }
 };
 
+const createReview = async (req: Request, res: Response) => {
+  try {
+    const result = await BookingService.createReview(
+      req.body,
+      req.params.bookingId as string,
+      req.user?.id as string,
+    );
+    return res.status(201).json({
+      success: true,
+      message: "Review created successfully",
+      data: result,
+    });
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Something went wrong";
+    return res.status(500).json({
+      success: false,
+      message: errorMessage,
+      data: null,
+    });
+  }
+};
+
 export const BookingController = {
   createBooking,
   getAllBookings,
   getBookingById,
+  createReview,
 };

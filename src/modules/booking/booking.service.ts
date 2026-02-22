@@ -186,8 +186,99 @@ const getBookingById = async (id: string, userId: string) => {
 
   return booking;
 };
+
+const createReview = async (
+  payload: {
+    rating: number;
+    comment?: string;
+  },
+  bookingId: string,
+  studentId: string,
+) => {
+  const result = await prisma.$transaction(async (tx) => {
+    const booking = await tx.booking.findFirst({
+      where: {
+        id: bookingId,
+        status: "COMPLETED",
+        studentId,
+        student: {
+          status: "ACTIVE",
+        },
+      },
+      include: {
+        review: true,
+        tutor: true,
+      },
+    });
+
+    if (!booking)
+      throw new Error("Booking not found or status is not completed");
+
+    if (booking.review) throw new Error("Review already created");
+
+    if (payload.rating < 1 || payload.rating > 5)
+      throw new Error("Rating must be between 1 and 5");
+
+    const review = await tx.review.create({
+      data: {
+        rating: payload.rating,
+        comment: payload.comment,
+        bookingId,
+        studentId,
+        tutorId: booking.tutorId,
+      },
+      include: {
+        student: {
+          select: {
+            name: true,
+            email: true,
+            role: true,
+            status: true,
+          },
+        },
+        tutor: {
+          select: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+                role: true,
+                status: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const tutor = booking.tutor;
+
+    const newTotalReviews = tutor.totalReviews + 1;
+
+    const newAverageRating = parseFloat(
+      (
+        (tutor.averageRating * tutor.totalReviews + payload.rating) /
+        newTotalReviews
+      ).toFixed(2),
+    );
+
+    await tx.tutorProfile.update({
+      where: { id: tutor.id },
+      data: {
+        totalReviews: newTotalReviews,
+        averageRating: newAverageRating,
+      },
+    });
+
+    return review;
+  });
+
+  return result;
+};
+
 export const BookingService = {
   createBooking,
   getAllBookings,
   getBookingById,
+  createReview,
 };
