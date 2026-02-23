@@ -42,6 +42,23 @@ const globalErrorHandler = (
     message = "Invalid data provided";
   }
 
+  // Prisma Unknown Request Error
+  else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+    statusCode = 500;
+    message = "Error occurred during query execution";
+  }
+
+  // Prisma Client Initialization Error
+  else if (error instanceof Prisma.PrismaClientInitializationError) {
+    if (error.errorCode === "P1001") {
+      statusCode = 401;
+      message = "Authentication failed, please check your credentials";
+    } else if (error.errorCode === "P1000") {
+      statusCode = 400;
+      message = "Can't connect to database";
+    }
+  }
+
   //  Custom thrown error
   else if (error instanceof Error) {
     statusCode = 400;
