@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AvailabilityService } from "./availability.service";
 
-const createAvailableSlot = async (req: Request, res: Response) => {
+const createAvailableSlot = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await AvailabilityService.createAvailableSlot(
       req.body,
@@ -13,17 +17,15 @@ const createAvailableSlot = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getAvailableTimeSlots = async (req: Request, res: Response) => {
+const getAvailableTimeSlots = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await AvailabilityService.getAvailableTimeSlots(
       req.user?.id as string,
@@ -34,17 +36,15 @@ const getAvailableTimeSlots = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getAllAvailableTimeSlots = async (req: Request, res: Response) => {
+const getAllAvailableTimeSlots = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await AvailabilityService.getAllAvailableTimeSlots();
     return res.status(200).json({
@@ -53,17 +53,15 @@ const getAllAvailableTimeSlots = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getAvailableTimeSlotById = async (req: Request, res: Response) => {
+const getAvailableTimeSlotById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await AvailabilityService.getAvailableTimeSlotById(
       req.params.id as string,
@@ -74,13 +72,7 @@ const getAvailableTimeSlotById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 

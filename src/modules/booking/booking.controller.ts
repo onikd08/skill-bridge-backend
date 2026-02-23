@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { BookingService } from "./booking.service";
 
-const createBooking = async (req: Request, res: Response) => {
+const createBooking = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.user?.id as string;
     const availabilityId = req.params.availabilityId as string;
@@ -16,17 +20,15 @@ const createBooking = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getAllBookings = async (req: Request, res: Response) => {
+const getAllBookings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await BookingService.getAllBookings(req.user?.id as string);
     return res.status(200).json({
@@ -35,17 +37,15 @@ const getAllBookings = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getBookingById = async (req: Request, res: Response) => {
+const getBookingById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await BookingService.getBookingById(
       req.params.bookingId as string,
@@ -57,17 +57,15 @@ const getBookingById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const createReview = async (req: Request, res: Response) => {
+const createReview = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await BookingService.createReview(
       req.body,
@@ -80,13 +78,7 @@ const createReview = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 

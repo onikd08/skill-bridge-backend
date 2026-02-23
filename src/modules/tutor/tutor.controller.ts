@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { TutorService } from "./tutor.service";
 
-const getAllActiveTutors = async (req: Request, res: Response) => {
+const getAllActiveTutors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await TutorService.getAllActiveTutors();
     return res.status(200).json({
@@ -10,17 +14,15 @@ const getAllActiveTutors = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getTutorById = async (req: Request, res: Response) => {
+const getTutorById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await TutorService.getTutorById(req.params.id as string);
     return res.status(200).json({
@@ -29,17 +31,15 @@ const getTutorById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const createTutorProfile = async (req: Request, res: Response) => {
+const createTutorProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await TutorService.createTutorProfile(
       req.body,
@@ -51,17 +51,15 @@ const createTutorProfile = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const updateTutorProfile = async (req: Request, res: Response) => {
+const updateTutorProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await TutorService.updateTutorProfile(
       req.user?.id as string,
@@ -73,17 +71,15 @@ const updateTutorProfile = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const updateTutorIsFeatured = async (req: Request, res: Response) => {
+const updateTutorIsFeatured = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await TutorService.updateTutorIsFeatured(
       req.params.tutorId as string,
@@ -94,17 +90,15 @@ const updateTutorIsFeatured = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getAllTutors = async (req: Request, res: Response) => {
+const getAllTutors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await TutorService.getAllTutors();
     return res.status(200).json({
@@ -113,13 +107,7 @@ const getAllTutors = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 

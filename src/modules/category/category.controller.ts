@@ -1,11 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CategoryService } from "./category.service";
 import { get } from "node:https";
 
-const createCategory = async (req: Request, res: Response) => {
+const createCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    // if (!req.user || req.user.role !== "ADMIN")
-    //   return res.status(401).json({ success: false, message: "Unauthorized" });
     const result = await CategoryService.createCategory(req.body);
     return res.status(201).json({
       success: true,
@@ -13,17 +15,15 @@ const createCategory = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const getCategories = async (req: Request, res: Response) => {
+const getCategories = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await CategoryService.getCategories();
     return res.status(200).json({
@@ -32,17 +32,15 @@ const getCategories = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 
-const deleteCategory = async (req: Request, res: Response) => {
+const deleteCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await CategoryService.deleteCategory(
       req.params.id as string,
@@ -53,13 +51,7 @@ const deleteCategory = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return res.status(500).json({
-      success: false,
-      message: errorMessage,
-      data: null,
-    });
+    next(error);
   }
 };
 export const CategoryController = {
