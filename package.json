@@ -7,7 +7,8 @@
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "seed:admin": "npx tsx src/seed/seedAdmin.ts",
-    "build": "tsc",
+    "postinstall": "prisma generate",
+    "build": "prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir api --external pg-native",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write ."
@@ -32,6 +33,7 @@
     "jsonwebtoken": "^9.0.3",
     "node-cron": "^4.2.1",
     "pg": "^8.18.0",
+    "tsup": "^8.5.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
