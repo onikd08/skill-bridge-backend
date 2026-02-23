@@ -559,10 +559,6 @@ export type TutorProfileUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TutorProfileUpdateToOneWithWhereWithoutUserInput, Prisma.TutorProfileUpdateWithoutUserInput>, Prisma.TutorProfileUncheckedUpdateWithoutUserInput>
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
