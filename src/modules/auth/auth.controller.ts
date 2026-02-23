@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "./auth.service";
+import sendSuccessResponse from "../../utils/sendSuccessResponse";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await AuthService.createUser(req.body);
-    return res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 201, "User created successfully", result);
   } catch (error) {
     next(error);
   }
@@ -16,11 +13,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await AuthService.loginUser(req.body);
-    return res.status(200).json({
-      success: true,
-      message: "User logged in successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 200, "User logged in successfully", result);
   } catch (error) {
     next(error);
   }

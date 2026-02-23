@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AvailabilityService } from "./availability.service";
+import sendSuccessResponse from "../../utils/sendSuccessResponse";
+import { send } from "node:process";
 
 const createAvailableSlot = async (
   req: Request,
@@ -11,11 +13,12 @@ const createAvailableSlot = async (
       req.body,
       req.user?.id as string,
     );
-    return res.status(201).json({
-      success: true,
-      message: "Available slot created successfully",
-      data: result,
-    });
+    sendSuccessResponse(
+      res,
+      201,
+      "Available slot created successfully",
+      result,
+    );
   } catch (error) {
     next(error);
   }
@@ -30,11 +33,12 @@ const getAvailableTimeSlots = async (
     const result = await AvailabilityService.getAvailableTimeSlots(
       req.user?.id as string,
     );
-    return res.status(200).json({
-      success: true,
-      message: "Available time slots fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(
+      res,
+      200,
+      "Available time slots fetched successfully",
+      result,
+    );
   } catch (error) {
     next(error);
   }
@@ -47,11 +51,12 @@ const getAllAvailableTimeSlots = async (
 ) => {
   try {
     const result = await AvailabilityService.getAllAvailableTimeSlots();
-    return res.status(200).json({
-      success: true,
-      message: "Available time slots fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(
+      res,
+      200,
+      "Available time slots fetched successfully",
+      result,
+    );
   } catch (error) {
     next(error);
   }
@@ -66,11 +71,12 @@ const getAvailableTimeSlotById = async (
     const result = await AvailabilityService.getAvailableTimeSlotById(
       req.params.id as string,
     );
-    return res.status(200).json({
-      success: true,
-      message: "Available time slot fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(
+      res,
+      200,
+      "Available time slot fetched successfully",
+      result,
+    );
   } catch (error) {
     next(error);
   }

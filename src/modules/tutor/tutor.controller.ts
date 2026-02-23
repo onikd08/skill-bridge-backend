@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { TutorService } from "./tutor.service";
+import sendSuccessResponse from "../../utils/sendSuccessResponse";
 
 const getAllActiveTutors = async (
   req: Request,
@@ -8,11 +9,12 @@ const getAllActiveTutors = async (
 ) => {
   try {
     const result = await TutorService.getAllActiveTutors();
-    return res.status(200).json({
-      success: true,
-      message: "Tutors fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(
+      res,
+      200,
+      "All Active Tutors fetched successfully",
+      result,
+    );
   } catch (error) {
     next(error);
   }
@@ -25,11 +27,7 @@ const getTutorById = async (
 ) => {
   try {
     const result = await TutorService.getTutorById(req.params.id as string);
-    return res.status(200).json({
-      success: true,
-      message: "Tutor fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 200, "Tutor fetched successfully", result);
   } catch (error) {
     next(error);
   }
@@ -45,11 +43,7 @@ const createTutorProfile = async (
       req.body,
       req.user?.id,
     );
-    return res.status(201).json({
-      success: true,
-      message: "Tutor created successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 201, "Tutor created successfully", result);
   } catch (error) {
     next(error);
   }
@@ -65,11 +59,7 @@ const updateTutorProfile = async (
       req.user?.id as string,
       req.body,
     );
-    return res.status(200).json({
-      success: true,
-      message: "Tutor updated successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 200, "Tutor updated successfully", result);
   } catch (error) {
     next(error);
   }
@@ -84,11 +74,12 @@ const updateTutorIsFeatured = async (
     const result = await TutorService.updateTutorIsFeatured(
       req.params.tutorId as string,
     );
-    return res.status(200).json({
-      success: true,
-      message: "IsFeatured updated successfully",
-      data: result,
-    });
+    sendSuccessResponse(
+      res,
+      200,
+      `Tutor is now marked ${result.isFeatured ? "featured" : "not featured"}`,
+      result,
+    );
   } catch (error) {
     next(error);
   }
@@ -101,11 +92,7 @@ const getAllTutors = async (
 ) => {
   try {
     const result = await TutorService.getAllTutors();
-    return res.status(200).json({
-      success: true,
-      message: "Tutors fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 200, "All tutors fetched successfully", result);
   } catch (error) {
     next(error);
   }

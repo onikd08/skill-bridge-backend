@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { BookingService } from "./booking.service";
+import sendSuccessResponse from "../../utils/sendSuccessResponse";
 
 const createBooking = async (
   req: Request,
@@ -14,11 +15,7 @@ const createBooking = async (
       availabilityId,
       req.body,
     );
-    return res.status(201).json({
-      success: true,
-      message: "Booking created successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 201, "Booking created successfully", result);
   } catch (error) {
     next(error);
   }
@@ -31,11 +28,7 @@ const getAllBookings = async (
 ) => {
   try {
     const result = await BookingService.getAllBookings(req.user?.id as string);
-    return res.status(200).json({
-      success: true,
-      message: "Bookings fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 200, "Bookings fetched successfully", result);
   } catch (error) {
     next(error);
   }
@@ -51,11 +44,7 @@ const getBookingById = async (
       req.params.bookingId as string,
       req.user?.id as string,
     );
-    return res.status(200).json({
-      success: true,
-      message: "Booking fetched successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 200, "Booking fetched successfully", result);
   } catch (error) {
     next(error);
   }
@@ -72,11 +61,7 @@ const createReview = async (
       req.params.bookingId as string,
       req.user?.id as string,
     );
-    return res.status(201).json({
-      success: true,
-      message: "Review created successfully",
-      data: result,
-    });
+    sendSuccessResponse(res, 201, "Review created successfully", result);
   } catch (error) {
     next(error);
   }
