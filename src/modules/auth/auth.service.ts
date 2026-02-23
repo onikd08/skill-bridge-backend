@@ -7,6 +7,9 @@ import config from "../../config";
 const createUser = async (
   payload: Omit<User, "id" | "createdAt" | "updatedAt" | "status">,
 ) => {
+  if (payload.role === "ADMIN") {
+    throw new Error("USER must be either TUTOR or STUDENT");
+  }
   const hashedPassword = await bcrypt.hash(payload.password, 8);
 
   const result = await prisma.user.create({

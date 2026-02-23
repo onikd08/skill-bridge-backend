@@ -233,6 +233,9 @@ var prisma = new PrismaClient({ adapter });
 // src/modules/auth/auth.service.ts
 import jwt from "jsonwebtoken";
 var createUser = async (payload) => {
+  if (payload.role === "ADMIN") {
+    throw new Error("USER must be either TUTOR or STUDENT");
+  }
   const hashedPassword = await bcrypt.hash(payload.password, 8);
   const result = await prisma.user.create({
     data: {
