@@ -10,6 +10,7 @@ interface ITutorProfile {
 const includeTutor = {
   categories: true,
   reviews: true,
+  availability: true,
   user: {
     select: {
       name: true,

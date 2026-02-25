@@ -276,9 +276,20 @@ const createReview = async (
   return result;
 };
 
+const getMyBookings = async (userId: string) => {
+  const result = await prisma.booking.findMany({
+    where: {
+      studentId: userId,
+    },
+    include: bookingInclude,
+  });
+  return result;
+};
+
 export const BookingService = {
   createBooking,
   getAllBookings,
   getBookingById,
   createReview,
+  getMyBookings,
 };
