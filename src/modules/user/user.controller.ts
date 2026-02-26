@@ -13,7 +13,7 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 
 const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await UserService.getUserById(req.params.id as string);
+    const result = await UserService.getUserById(req.user?.id as string);
     sendSuccessResponse(res, 200, "User fetched successfully", result);
   } catch (error) {
     next(error);
@@ -33,8 +33,25 @@ const updateUserStatus = async (
   }
 };
 
+const updateUserInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await UserService.updateUserInfo(
+      req.user?.id as string,
+      req.body,
+    );
+    sendSuccessResponse(res, 200, "User info updated successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const UserController = {
   getAllUsers,
   getUserById,
   updateUserStatus,
+  updateUserInfo,
 };

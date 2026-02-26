@@ -64,8 +64,25 @@ const updateUserStatus = async (userId: string) => {
   return result;
 };
 
+const updateUserInfo = async (
+  userId: string,
+  payload: {
+    name: string;
+    imageUrl?: string;
+  },
+) => {
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: payload,
+  });
+  return result;
+};
+
 export const UserService = {
   getAllUsers,
   updateUserStatus,
   getUserById,
+  updateUserInfo,
 };
