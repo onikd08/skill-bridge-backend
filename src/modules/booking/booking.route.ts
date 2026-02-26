@@ -35,4 +35,10 @@ router.get(
   BookingController.getBookingById,
 );
 
+router.put(
+  "/:bookingId",
+  auth(UserRole.STUDENT),
+  BookingController.cancelBooking,
+);
+
 export const BookingRoutes = router;

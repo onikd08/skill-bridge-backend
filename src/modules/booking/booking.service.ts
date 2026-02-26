@@ -286,10 +286,44 @@ const getMyBookings = async (userId: string) => {
   return result;
 };
 
+const cancelBooking = async (userId: string, bookingId: string) => {
+  return await prisma.$transaction(async (tx) => {
+    const booking = await tx.booking.findFirst({
+      where: {
+        id: bookingId,
+        studentId: userId,
+        status: "CONFIRMED",
+      },
+    });
+
+    if (!booking) {
+      throw new Error("Booking can not be cancled");
+    }
+
+    await tx.availability.update({
+      where: {
+        id: booking.availabilityId,
+      },
+      data: {
+        isBooked: false,
+      },
+    });
+
+    const deleteBooking = await tx.booking.delete({
+      where: {
+        id: bookingId,
+      },
+    });
+
+    return deleteBooking;
+  });
+};
+
 export const BookingService = {
   createBooking,
   getAllBookings,
   getBookingById,
   createReview,
   getMyBookings,
+  cancelBooking,
 };

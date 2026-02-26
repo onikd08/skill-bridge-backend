@@ -321,6 +321,7 @@ import express2 from "express";
 var includeTutor = {
   categories: true,
   reviews: true,
+  availability: true,
   user: {
     select: {
       name: true,
@@ -1196,11 +1197,21 @@ var createReview = async (payload, bookingId, studentId) => {
   });
   return result;
 };
+var getMyBookings = async (userId) => {
+  const result = await prisma.booking.findMany({
+    where: {
+      studentId: userId
+    },
+    include: bookingInclude
+  });
+  return result;
+};
 var BookingService = {
   createBooking,
   getAllBookings,
   getBookingById,
-  createReview
+  createReview,
+  getMyBookings
 };
 
 // src/modules/booking/booking.controller.ts
@@ -1249,11 +1260,20 @@ var createReview2 = async (req, res, next) => {
     next(error);
   }
 };
+var getMyBookings2 = async (req, res, next) => {
+  try {
+    const result = await BookingService.getMyBookings(req.user?.id);
+    sendSuccessResponse(res, 200, "Bookings fetched successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 var BookingController = {
   createBooking: createBooking2,
   getAllBookings: getAllBookings2,
   getBookingById: getBookingById2,
-  createReview: createReview2
+  createReview: createReview2,
+  getMyBookings: getMyBookings2
 };
 
 // src/modules/booking/booking.route.ts
@@ -1272,6 +1292,11 @@ router5.get(
   "/",
   auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
   BookingController.getAllBookings
+);
+router5.get(
+  "/my-bookings",
+  auth(UserRole.STUDENT),
+  BookingController.getMyBookings
 );
 router5.get(
   "/:bookingId",
