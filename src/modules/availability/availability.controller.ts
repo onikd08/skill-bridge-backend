@@ -82,9 +82,26 @@ const getAvailableTimeSlotById = async (
   }
 };
 
+const deleteAvailability = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await AvailabilityService.deleteAvailability(
+      req.user?.id,
+      req.params.availabilityId as string,
+    );
+    sendSuccessResponse(res, 200, "Availability deleted successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const AvailabilityController = {
   createAvailableSlot,
   getAvailableTimeSlots,
   getAllAvailableTimeSlots,
   getAvailableTimeSlotById,
+  deleteAvailability,
 };

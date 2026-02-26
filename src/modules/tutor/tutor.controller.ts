@@ -98,6 +98,20 @@ const getAllTutors = async (
   }
 };
 
+const getTutorProfileByUserId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await TutorService.getTutorProfileByUserId(
+      req.user?.id as string,
+    );
+    sendSuccessResponse(res, 200, "Tutor fetched successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const TutorController = {
   getAllActiveTutors,
   getTutorById,
@@ -105,4 +119,5 @@ export const TutorController = {
   updateTutorProfile,
   updateTutorIsFeatured,
   getAllTutors,
+  getTutorProfileByUserId,
 };

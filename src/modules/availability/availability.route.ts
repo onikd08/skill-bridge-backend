@@ -24,5 +24,6 @@ router.get(
 );
 
 router.get("/:id", AvailabilityController.getAvailableTimeSlotById);
+router.delete("/:availabilityId", AvailabilityController.deleteAvailability);
 
 export const AvailabilityRoutes = router;

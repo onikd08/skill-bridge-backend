@@ -8,6 +8,11 @@ const router = express.Router();
 router.post("/", auth(UserRole.TUTOR), TutorController.createTutorProfile);
 router.get("/active", TutorController.getAllActiveTutors);
 router.get("/", TutorController.getAllTutors);
+router.get(
+  "/profile",
+  auth(UserRole.TUTOR),
+  TutorController.getTutorProfileByUserId,
+);
 router.get("/:id", TutorController.getTutorById);
 router.put("/", auth(UserRole.TUTOR), TutorController.updateTutorProfile);
 router.put(

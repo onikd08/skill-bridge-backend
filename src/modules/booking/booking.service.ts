@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma";
 
 const bookingInclude = {
+  review: true,
   availability: {
     select: {
       startTime: true,

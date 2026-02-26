@@ -120,7 +120,6 @@ const updateTutorProfile = async (
   }
 
   const { categories, ...rest } = payload;
-
   let categoryUpdate = {};
 
   if (categories !== undefined) {
@@ -185,6 +184,15 @@ const updateTutorIsFeatured = async (tutorId: string) => {
   return result;
 };
 
+const getTutorProfileByUserId = async (userId: string) => {
+  return await prisma.tutorProfile.findUnique({
+    where: {
+      userId,
+    },
+    include: includeTutor,
+  });
+};
+
 export const TutorService = {
   getAllActiveTutors,
   getTutorById,
@@ -192,4 +200,5 @@ export const TutorService = {
   updateTutorProfile,
   updateTutorIsFeatured,
   getAllTutors,
+  getTutorProfileByUserId,
 };

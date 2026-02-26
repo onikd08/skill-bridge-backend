@@ -186,9 +186,29 @@ const getAvailableTimeSlotById = async (id: string) => {
   return result;
 };
 
+const deleteAvailability = async (tutorId: string, availabilityId: string) => {
+  const availability = await prisma.availability.findFirst({
+    where: {
+      id: availabilityId,
+      tutorId,
+    },
+  });
+  if (!availability) throw new Error("Availability not found");
+  if (availability.isBooked) {
+    throw new Error("This slot is already booked");
+  }
+  const result = await prisma.availability.delete({
+    where: {
+      id: availabilityId,
+    },
+  });
+  return result;
+};
+
 export const AvailabilityService = {
   createAvailableSlot,
   getAvailableTimeSlots,
   getAllAvailableTimeSlots,
   getAvailableTimeSlotById,
+  deleteAvailability,
 };
