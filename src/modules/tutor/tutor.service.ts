@@ -158,11 +158,11 @@ const updateTutorProfile = async (
   return result;
 };
 
-const updateTutorIsFeatured = async (tutorId: string) => {
+const updateTutorIsFeatured = async (userId: string) => {
   const result = await prisma.$transaction(async (tx) => {
     const tutor = await tx.tutorProfile.findUnique({
       where: {
-        id: tutorId,
+        userId,
       },
     });
 
@@ -172,7 +172,7 @@ const updateTutorIsFeatured = async (tutorId: string) => {
 
     return await tx.tutorProfile.update({
       where: {
-        id: tutorId,
+        userId,
       },
       data: {
         isFeatured: !tutor.isFeatured,

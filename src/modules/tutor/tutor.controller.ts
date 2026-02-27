@@ -72,7 +72,7 @@ const updateTutorIsFeatured = async (
 ) => {
   try {
     const result = await TutorService.updateTutorIsFeatured(
-      req.params.tutorId as string,
+      req.params.userId as string,
     );
     sendSuccessResponse(
       res,

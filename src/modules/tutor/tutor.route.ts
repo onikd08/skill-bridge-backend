@@ -16,7 +16,7 @@ router.get(
 router.get("/:id", TutorController.getTutorById);
 router.put("/", auth(UserRole.TUTOR), TutorController.updateTutorProfile);
 router.put(
-  "/featured/:tutorId",
+  "/featured/:userId",
   auth(UserRole.ADMIN),
   TutorController.updateTutorIsFeatured,
 );
