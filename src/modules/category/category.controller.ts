@@ -43,8 +43,27 @@ const deleteCategory = async (
     next(error);
   }
 };
+
+const updateCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { categoryName } = req.body;
+    const result = await CategoryService.updateCategory(
+      req.params.id as string,
+      categoryName,
+    );
+
+    sendSuccessResponse(res, 200, "Category updated successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 export const CategoryController = {
   createCategory,
   getCategories,
   deleteCategory,
+  updateCategory,
 };

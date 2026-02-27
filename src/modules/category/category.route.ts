@@ -8,5 +8,6 @@ const router = express.Router();
 router.post("/", auth(UserRole.ADMIN), CategoryController.createCategory);
 router.get("/", CategoryController.getCategories);
 router.delete("/:id", auth(UserRole.ADMIN), CategoryController.deleteCategory);
+router.put("/:id", auth(UserRole.ADMIN), CategoryController.updateCategory);
 
 export const CategoryRoutes = router;
