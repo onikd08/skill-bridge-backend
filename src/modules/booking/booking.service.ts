@@ -277,16 +277,6 @@ const createReview = async (
   return result;
 };
 
-const getMyBookings = async (userId: string) => {
-  const result = await prisma.booking.findMany({
-    where: {
-      studentId: userId,
-    },
-    include: bookingInclude,
-  });
-  return result;
-};
-
 const cancelBooking = async (userId: string, bookingId: string) => {
   return await prisma.$transaction(async (tx) => {
     const booking = await tx.booking.findFirst({
@@ -325,6 +315,5 @@ export const BookingService = {
   getAllBookings,
   getBookingById,
   createReview,
-  getMyBookings,
   cancelBooking,
 };

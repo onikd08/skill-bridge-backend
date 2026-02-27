@@ -67,19 +67,6 @@ const createReview = async (
   }
 };
 
-const getMyBookings = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const result = await BookingService.getMyBookings(req.user?.id as string);
-    sendSuccessResponse(res, 200, "Bookings fetched successfully", result);
-  } catch (error) {
-    next(error);
-  }
-};
-
 const cancelBooking = async (
   req: Request,
   res: Response,
@@ -101,6 +88,5 @@ export const BookingController = {
   getAllBookings,
   getBookingById,
   createReview,
-  getMyBookings,
   cancelBooking,
 };

@@ -444,11 +444,11 @@ var updateTutorProfile = async (id, payload) => {
   });
   return result;
 };
-var updateTutorIsFeatured = async (tutorId) => {
+var updateTutorIsFeatured = async (userId) => {
   const result = await prisma.$transaction(async (tx) => {
     const tutor = await tx.tutorProfile.findUnique({
       where: {
-        id: tutorId
+        userId
       }
     });
     if (!tutor) {
@@ -456,7 +456,7 @@ var updateTutorIsFeatured = async (tutorId) => {
     }
     return await tx.tutorProfile.update({
       where: {
-        id: tutorId
+        userId
       },
       data: {
         isFeatured: !tutor.isFeatured
@@ -466,13 +466,22 @@ var updateTutorIsFeatured = async (tutorId) => {
   });
   return result;
 };
+var getTutorProfileByUserId = async (userId) => {
+  return await prisma.tutorProfile.findUnique({
+    where: {
+      userId
+    },
+    include: includeTutor
+  });
+};
 var TutorService = {
   getAllActiveTutors,
   getTutorById,
   createTutorProfile,
   updateTutorProfile,
   updateTutorIsFeatured,
-  getAllTutors
+  getAllTutors,
+  getTutorProfileByUserId
 };
 
 // src/modules/tutor/tutor.controller.ts
@@ -522,7 +531,7 @@ var updateTutorProfile2 = async (req, res, next) => {
 var updateTutorIsFeatured2 = async (req, res, next) => {
   try {
     const result = await TutorService.updateTutorIsFeatured(
-      req.params.tutorId
+      req.params.userId
     );
     sendSuccessResponse(
       res,
@@ -542,13 +551,24 @@ var getAllTutors2 = async (req, res, next) => {
     next(error);
   }
 };
+var getTutorProfileByUserId2 = async (req, res, next) => {
+  try {
+    const result = await TutorService.getTutorProfileByUserId(
+      req.user?.id
+    );
+    sendSuccessResponse(res, 200, "Tutor fetched successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 var TutorController = {
   getAllActiveTutors: getAllActiveTutors2,
   getTutorById: getTutorById2,
   createTutorProfile: createTutorProfile2,
   updateTutorProfile: updateTutorProfile2,
   updateTutorIsFeatured: updateTutorIsFeatured2,
-  getAllTutors: getAllTutors2
+  getAllTutors: getAllTutors2,
+  getTutorProfileByUserId: getTutorProfileByUserId2
 };
 
 // src/middlewares/auth.ts
@@ -603,10 +623,15 @@ var router2 = express2.Router();
 router2.post("/", auth(UserRole.TUTOR), TutorController.createTutorProfile);
 router2.get("/active", TutorController.getAllActiveTutors);
 router2.get("/", TutorController.getAllTutors);
+router2.get(
+  "/profile",
+  auth(UserRole.TUTOR),
+  TutorController.getTutorProfileByUserId
+);
 router2.get("/:id", TutorController.getTutorById);
 router2.put("/", auth(UserRole.TUTOR), TutorController.updateTutorProfile);
 router2.put(
-  "/featured/:tutorId",
+  "/featured/:userId",
   auth(UserRole.ADMIN),
   TutorController.updateTutorIsFeatured
 );
@@ -661,10 +686,22 @@ var deleteCategory = async (id) => {
   });
   return result;
 };
+var updateCategory = async (id, categoryName) => {
+  const result = await prisma.category.update({
+    where: {
+      id
+    },
+    data: {
+      categoryName
+    }
+  });
+  return result;
+};
 var CategoryService = {
   createCategory,
   getCategories,
-  deleteCategory
+  deleteCategory,
+  updateCategory
 };
 
 // src/modules/category/category.controller.ts
@@ -694,10 +731,23 @@ var deleteCategory2 = async (req, res, next) => {
     next(error);
   }
 };
+var updateCategory2 = async (req, res, next) => {
+  try {
+    const { categoryName } = req.body;
+    const result = await CategoryService.updateCategory(
+      req.params.id,
+      categoryName
+    );
+    sendSuccessResponse(res, 200, "Category updated successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 var CategoryController = {
   createCategory: createCategory2,
   getCategories: getCategories2,
-  deleteCategory: deleteCategory2
+  deleteCategory: deleteCategory2,
+  updateCategory: updateCategory2
 };
 
 // src/modules/category/category.route.ts
@@ -705,6 +755,7 @@ var router3 = express3.Router();
 router3.post("/", auth(UserRole.ADMIN), CategoryController.createCategory);
 router3.get("/", CategoryController.getCategories);
 router3.delete("/:id", auth(UserRole.ADMIN), CategoryController.deleteCategory);
+router3.put("/:id", auth(UserRole.ADMIN), CategoryController.updateCategory);
 var CategoryRoutes = router3;
 
 // src/modules/availability/availability.route.ts
@@ -875,11 +926,30 @@ var getAvailableTimeSlotById = async (id) => {
   }
   return result;
 };
+var deleteAvailability = async (tutorId, availabilityId) => {
+  const availability = await prisma.availability.findFirst({
+    where: {
+      id: availabilityId,
+      tutorId
+    }
+  });
+  if (!availability) throw new Error("Availability not found");
+  if (availability.isBooked) {
+    throw new Error("This slot is already booked");
+  }
+  const result = await prisma.availability.delete({
+    where: {
+      id: availabilityId
+    }
+  });
+  return result;
+};
 var AvailabilityService = {
   createAvailableSlot,
   getAvailableTimeSlots,
   getAllAvailableTimeSlots,
-  getAvailableTimeSlotById
+  getAvailableTimeSlotById,
+  deleteAvailability
 };
 
 // src/modules/availability/availability.controller.ts
@@ -942,11 +1012,23 @@ var getAvailableTimeSlotById2 = async (req, res, next) => {
     next(error);
   }
 };
+var deleteAvailability2 = async (req, res, next) => {
+  try {
+    const result = await AvailabilityService.deleteAvailability(
+      req.user?.id,
+      req.params.availabilityId
+    );
+    sendSuccessResponse(res, 200, "Availability deleted successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 var AvailabilityController = {
   createAvailableSlot: createAvailableSlot2,
   getAvailableTimeSlots: getAvailableTimeSlots2,
   getAllAvailableTimeSlots: getAllAvailableTimeSlots2,
-  getAvailableTimeSlotById: getAvailableTimeSlotById2
+  getAvailableTimeSlotById: getAvailableTimeSlotById2,
+  deleteAvailability: deleteAvailability2
 };
 
 // src/modules/availability/availability.route.ts
@@ -967,6 +1049,7 @@ router4.get(
   AvailabilityController.getAllAvailableTimeSlots
 );
 router4.get("/:id", AvailabilityController.getAvailableTimeSlotById);
+router4.delete("/:availabilityId", AvailabilityController.deleteAvailability);
 var AvailabilityRoutes = router4;
 
 // src/modules/booking/booking.route.ts
@@ -974,6 +1057,7 @@ import express5 from "express";
 
 // src/modules/booking/booking.service.ts
 var bookingInclude = {
+  review: true,
   availability: {
     select: {
       startTime: true,
@@ -1197,21 +1281,40 @@ var createReview = async (payload, bookingId, studentId) => {
   });
   return result;
 };
-var getMyBookings = async (userId) => {
-  const result = await prisma.booking.findMany({
-    where: {
-      studentId: userId
-    },
-    include: bookingInclude
+var cancelBooking = async (userId, bookingId) => {
+  return await prisma.$transaction(async (tx) => {
+    const booking = await tx.booking.findFirst({
+      where: {
+        id: bookingId,
+        studentId: userId,
+        status: "CONFIRMED"
+      }
+    });
+    if (!booking) {
+      throw new Error("Booking can not be cancled");
+    }
+    await tx.availability.update({
+      where: {
+        id: booking.availabilityId
+      },
+      data: {
+        isBooked: false
+      }
+    });
+    const deleteBooking = await tx.booking.delete({
+      where: {
+        id: bookingId
+      }
+    });
+    return deleteBooking;
   });
-  return result;
 };
 var BookingService = {
   createBooking,
   getAllBookings,
   getBookingById,
   createReview,
-  getMyBookings
+  cancelBooking
 };
 
 // src/modules/booking/booking.controller.ts
@@ -1260,10 +1363,13 @@ var createReview2 = async (req, res, next) => {
     next(error);
   }
 };
-var getMyBookings2 = async (req, res, next) => {
+var cancelBooking2 = async (req, res, next) => {
   try {
-    const result = await BookingService.getMyBookings(req.user?.id);
-    sendSuccessResponse(res, 200, "Bookings fetched successfully", result);
+    const result = await BookingService.cancelBooking(
+      req.user?.id,
+      req.params.bookingId
+    );
+    sendSuccessResponse(res, 200, "Booking cancelled successfully", result);
   } catch (error) {
     next(error);
   }
@@ -1273,7 +1379,7 @@ var BookingController = {
   getAllBookings: getAllBookings2,
   getBookingById: getBookingById2,
   createReview: createReview2,
-  getMyBookings: getMyBookings2
+  cancelBooking: cancelBooking2
 };
 
 // src/modules/booking/booking.route.ts
@@ -1294,14 +1400,14 @@ router5.get(
   BookingController.getAllBookings
 );
 router5.get(
-  "/my-bookings",
-  auth(UserRole.STUDENT),
-  BookingController.getMyBookings
-);
-router5.get(
   "/:bookingId",
   auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
   BookingController.getBookingById
+);
+router5.put(
+  "/:bookingId",
+  auth(UserRole.STUDENT),
+  BookingController.cancelBooking
 );
 var BookingRoutes = router5;
 
@@ -1383,6 +1489,11 @@ import express6 from "express";
 // src/modules/user/user.service.ts
 var getAllUsers = async () => {
   return await prisma.user.findMany({
+    where: {
+      role: {
+        not: "ADMIN"
+      }
+    },
     include: {
       tutorProfile: true
     },
@@ -1397,7 +1508,9 @@ var getUserById = async (userId) => {
       id: userId
     },
     include: {
-      tutorProfile: true
+      tutorProfile: true,
+      bookings: true,
+      reviews: true
     },
     omit: {
       password: true
@@ -1438,10 +1551,20 @@ var updateUserStatus = async (userId) => {
   });
   return result;
 };
+var updateUserInfo = async (userId, payload) => {
+  const result = await prisma.user.update({
+    where: {
+      id: userId
+    },
+    data: payload
+  });
+  return result;
+};
 var UserService = {
   getAllUsers,
   updateUserStatus,
-  getUserById
+  getUserById,
+  updateUserInfo
 };
 
 // src/modules/user/user.controller.ts
@@ -1455,7 +1578,7 @@ var getAllUsers2 = async (req, res, next) => {
 };
 var getUserById2 = async (req, res, next) => {
   try {
-    const result = await UserService.getUserById(req.params.id);
+    const result = await UserService.getUserById(req.user?.id);
     sendSuccessResponse(res, 200, "User fetched successfully", result);
   } catch (error) {
     next(error);
@@ -1469,20 +1592,41 @@ var updateUserStatus2 = async (req, res, next) => {
     next(error);
   }
 };
+var updateUserInfo2 = async (req, res, next) => {
+  try {
+    const result = await UserService.updateUserInfo(
+      req.user?.id,
+      req.body
+    );
+    sendSuccessResponse(res, 200, "User info updated successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 var UserController = {
   getAllUsers: getAllUsers2,
   getUserById: getUserById2,
-  updateUserStatus: updateUserStatus2
+  updateUserStatus: updateUserStatus2,
+  updateUserInfo: updateUserInfo2
 };
 
 // src/modules/user/user.route.ts
 var router7 = express6.Router();
-router7.get("/", auth(UserRole.ADMIN), UserController.getAllUsers);
-router7.get("/:id", auth(UserRole.ADMIN), UserController.getUserById);
+router7.get("/all-users", auth(UserRole.ADMIN), UserController.getAllUsers);
+router7.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
+  UserController.getUserById
+);
 router7.put(
   "/status/:id",
   auth(UserRole.ADMIN),
   UserController.updateUserStatus
+);
+router7.put(
+  "/",
+  auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
+  UserController.updateUserInfo
 );
 var UserRoutes = router7;
 
