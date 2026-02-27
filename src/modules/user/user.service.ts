@@ -2,6 +2,11 @@ import { prisma } from "../../lib/prisma";
 
 const getAllUsers = async () => {
   return await prisma.user.findMany({
+    where: {
+      role: {
+        not: "ADMIN",
+      },
+    },
     include: {
       tutorProfile: true,
     },
@@ -18,6 +23,8 @@ const getUserById = async (userId: string) => {
     },
     include: {
       tutorProfile: true,
+      bookings: true,
+      reviews: true,
     },
     omit: {
       password: true,
