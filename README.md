@@ -86,7 +86,7 @@ NODE_ENV=development
 
 ```bash
 # Clone repository
-git clone <your-backend-repo-url>
+git clone https://github.com/onikd08/skill-bridge-backend.git
 
 # Navigate to backend
 cd skill-bridge-backend
