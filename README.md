@@ -17,12 +17,12 @@ This API supports three roles:
 
 ---
 
----
-
 ## 🔐Admin credentials
 
 - Email: admin@email.com
 - password: admin1234
+
+---
 
 ## 🛠️ Tech Stack
 
