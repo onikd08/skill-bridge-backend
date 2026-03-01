@@ -17,9 +17,14 @@ This API supports three roles:
 
 ---
 
-## 🛠️ Tech Stack
+---
 
-> Update this section according to your actual implementation.
+## 🔐Admin credentials
+
+- Email: admin@email.com
+- password: admin1234
+
+## 🛠️ Tech Stack
 
 - Node.js
 - Express.js
@@ -38,14 +43,11 @@ This API supports three roles:
 src/
  ├── config/
  |    └── index.ts
- │
  ├── middleware/
  │    └── auth.ts
- |
  ├── lib/
  │    ├── cron.ts
  │    ├── prisma.ts
- |
  ├── modules/
  │    ├── auth/
  │    ├── availability/
@@ -54,13 +56,10 @@ src/
  │    └──review/
  │    └──tutor/
  │    └──user/
- |
  ├── routes/
  │    └── index.ts
- |
  ├── seeds/
  │    └── seedAdmin.ts
- |
  ├── app.ts
  └── server.ts
 
