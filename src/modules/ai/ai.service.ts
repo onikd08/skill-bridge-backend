@@ -6,6 +6,7 @@ export const tools = {
     categoryName?: string;
     maxHourlyRate?: number;
     minExperience?: number;
+    hasAvailableTimeSlot?: boolean;
   }) => {
     return await prisma.tutorProfile.findMany({
       where: {
@@ -29,6 +30,16 @@ export const tools = {
                 experience: { gte: args.minExperience },
               }
             : {},
+          args.hasAvailableTimeSlot
+            ? {
+                availability: {
+                  some: {
+                    isBooked: false,
+                    startTime: { gt: new Date() },
+                  },
+                },
+              }
+            : {},
         ],
       },
       include: {
@@ -39,6 +50,19 @@ export const tools = {
         },
         categories: {
           select: { categoryName: true },
+        },
+        availability: {
+          where: {
+            isBooked: false,
+            startTime: { gt: new Date() },
+          },
+          take: 3,
+          orderBy: { startTime: "asc" },
+          select: {
+            startTime: true,
+            endTime: true,
+            totalPrice: true,
+          },
         },
       },
       take: 5,
@@ -67,6 +91,10 @@ export const tutorToolDeclaration: Tool[] = [
             minExperience: {
               type: SchemaType.NUMBER,
               description: "The minimum years of experience required",
+            },
+            hasAvailableTimeSlot: {
+              type: SchemaType.BOOLEAN,
+              description: "Whether the user exclusively wants tutors who currently have unbooked, available time slots in the future.",
             },
           },
         },

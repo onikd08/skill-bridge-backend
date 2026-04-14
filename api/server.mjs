@@ -9,7 +9,7 @@ import express7 from "express";
 import cors from "cors";
 
 // src/routes/index.ts
-import { Router as Router2 } from "express";
+import { Router as Router3 } from "express";
 
 // src/modules/auth/auth.route.ts
 import express from "express";
@@ -223,7 +223,8 @@ var config_default = {
   jwt_secret: process.env.JWT_SECRET,
   admin_email: process.env.ADMIN_EMAIL,
   admin_password: process.env.ADMIN_PASSWORD,
-  node_env: process.env.NODE_ENV
+  node_env: process.env.NODE_ENV,
+  gemini_api_key: process.env.GEMINI_API_KEY
 };
 
 // src/lib/prisma.ts
@@ -1656,8 +1657,177 @@ router7.put(
 router7.get("/student/:id", UserController.getStudentById);
 var UserRoutes = router7;
 
-// src/routes/index.ts
+// src/modules/ai/ai.route.ts
+import { Router as Router2 } from "express";
+
+// src/modules/ai/ai.controller.ts
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// src/modules/ai/ai.service.ts
+import { SchemaType } from "@google/generative-ai";
+var tools = {
+  searchTutors: async (args) => {
+    return await prisma.tutorProfile.findMany({
+      where: {
+        AND: [
+          args.categoryName ? {
+            categories: {
+              some: {
+                categoryName: { contains: args.categoryName, mode: "insensitive" }
+              }
+            }
+          } : {},
+          args.maxHourlyRate ? {
+            hourlyRate: { lte: args.maxHourlyRate }
+          } : {},
+          args.minExperience ? {
+            experience: { gte: args.minExperience }
+          } : {},
+          args.hasAvailableTimeSlot ? {
+            availability: {
+              some: {
+                isBooked: false,
+                startTime: { gt: /* @__PURE__ */ new Date() }
+              }
+            }
+          } : {}
+        ]
+      },
+      include: {
+        user: {
+          select: {
+            name: true
+          }
+        },
+        categories: {
+          select: { categoryName: true }
+        },
+        availability: {
+          where: {
+            isBooked: false,
+            startTime: { gt: /* @__PURE__ */ new Date() }
+          },
+          take: 3,
+          orderBy: { startTime: "asc" },
+          select: {
+            startTime: true,
+            endTime: true,
+            totalPrice: true
+          }
+        }
+      },
+      take: 5,
+      orderBy: { averageRating: "desc" }
+    });
+  }
+};
+var tutorToolDeclaration = [
+  {
+    functionDeclarations: [
+      {
+        name: "searchTutors",
+        description: "Search for tutors based on category, maximum hourly rate, and minimum years of experience.",
+        parameters: {
+          type: SchemaType.OBJECT,
+          properties: {
+            categoryName: {
+              type: SchemaType.STRING,
+              description: "The category or subject name the user wants to learn (e.g., Math, Programming)"
+            },
+            maxHourlyRate: {
+              type: SchemaType.NUMBER,
+              description: "The maximum hourly rate the user is willing to pay"
+            },
+            minExperience: {
+              type: SchemaType.NUMBER,
+              description: "The minimum years of experience required"
+            },
+            hasAvailableTimeSlot: {
+              type: SchemaType.BOOLEAN,
+              description: "Whether the user exclusively wants tutors who currently have unbooked, available time slots in the future."
+            }
+          }
+        }
+      }
+    ]
+  }
+];
+
+// src/modules/ai/ai.controller.ts
+var genAI = new GoogleGenerativeAI(config_default.gemini_api_key || process.env.GEMINI_API_KEY || "");
+async function sendMessageWithRetry(chat, message, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await chat.sendMessage(message);
+    } catch (error) {
+      if (error.status === 503 && i < retries - 1) {
+        const delay = Math.pow(2, i) * 1e3;
+        await new Promise((res) => setTimeout(res, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+}
+var model = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash",
+  systemInstruction: "You are the Skill-Bridge Assistant. Help users find tutors based on categories, explain how to book sessions, and answer general FAQ questions about the Skill-Bridge platform. Be friendly, concise, and helpful."
+});
+var chatWithAi = async (req, res) => {
+  try {
+    const { message, history } = req.body;
+    const sanitizedHistory = (history || []).map((msg) => ({
+      role: msg.role === "user" ? "user" : "model",
+      parts: Array.isArray(msg.parts) ? msg.parts.map((p) => ({ text: p.text || "" })) : [{ text: String(msg) }]
+    }));
+    const chat = model.startChat({
+      history: sanitizedHistory,
+      tools: tutorToolDeclaration
+    });
+    const result = await sendMessageWithRetry(chat, message);
+    const response = result.response;
+    const call = response.functionCalls()?.[0];
+    if (call) {
+      const toolName = call.name;
+      const data = await tools[toolName](call.args);
+      const finalResult = await chat.sendMessage([
+        {
+          functionResponse: {
+            name: call.name,
+            response: { content: data }
+          }
+        }
+      ]);
+      res.status(200).json({
+        success: true,
+        message: "AI responded successfully",
+        data: { reply: finalResult.response.text() }
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "AI responded successfully",
+        data: { reply: response.text() }
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error?.message || "Internal AI error"
+    });
+  }
+};
+var AIController = {
+  chatWithAi
+};
+
+// src/modules/ai/ai.route.ts
 var router8 = Router2();
+router8.post("/chat", AIController.chatWithAi);
+var AiRoutes = router8;
+
+// src/routes/index.ts
+var router9 = Router3();
 var routerManager = [
   {
     path: "/auth",
@@ -1686,12 +1856,16 @@ var routerManager = [
   {
     path: "/users",
     route: UserRoutes
+  },
+  {
+    path: "/ai",
+    route: AiRoutes
   }
 ];
 routerManager.forEach((route) => {
-  router8.use(route.path, route.route);
+  router9.use(route.path, route.route);
 });
-var routes_default = router8;
+var routes_default = router9;
 
 // src/middlewares/globalErrorHandler.ts
 var globalErrorHandler = (error, req, res, next) => {
