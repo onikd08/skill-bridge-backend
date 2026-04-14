@@ -327,7 +327,8 @@ var includeTutor = {
       name: true,
       email: true,
       role: true,
-      status: true
+      status: true,
+      imageUrl: true
     }
   }
 };
@@ -1560,11 +1561,26 @@ var updateUserInfo = async (userId, payload) => {
   });
   return result;
 };
+var getStudentById = async (userId) => {
+  return await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+    include: {
+      bookings: true,
+      reviews: true
+    },
+    omit: {
+      password: true
+    }
+  });
+};
 var UserService = {
   getAllUsers,
   updateUserStatus,
   getUserById,
-  updateUserInfo
+  updateUserInfo,
+  getStudentById
 };
 
 // src/modules/user/user.controller.ts
@@ -1603,11 +1619,20 @@ var updateUserInfo2 = async (req, res, next) => {
     next(error);
   }
 };
+var getStudentById2 = async (req, res, next) => {
+  try {
+    const result = await UserService.getStudentById(req.params.id);
+    sendSuccessResponse(res, 200, "Student fetched successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
 var UserController = {
   getAllUsers: getAllUsers2,
   getUserById: getUserById2,
   updateUserStatus: updateUserStatus2,
-  updateUserInfo: updateUserInfo2
+  updateUserInfo: updateUserInfo2,
+  getStudentById: getStudentById2
 };
 
 // src/modules/user/user.route.ts
@@ -1628,6 +1653,7 @@ router7.put(
   auth(UserRole.ADMIN, UserRole.TUTOR, UserRole.STUDENT),
   UserController.updateUserInfo
 );
+router7.get("/student/:id", UserController.getStudentById);
 var UserRoutes = router7;
 
 // src/routes/index.ts

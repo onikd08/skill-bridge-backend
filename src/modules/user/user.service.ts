@@ -87,9 +87,25 @@ const updateUserInfo = async (
   return result;
 };
 
+const getStudentById = async (userId: string) => {
+  return await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    include: {
+      bookings: true,
+      reviews: true,
+    },
+    omit: {
+      password: true,
+    },
+  });
+};
+
 export const UserService = {
   getAllUsers,
   updateUserStatus,
   getUserById,
   updateUserInfo,
+  getStudentById,
 };

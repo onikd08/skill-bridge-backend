@@ -24,4 +24,6 @@ router.put(
   UserController.updateUserInfo,
 );
 
+router.get("/student/:id", UserController.getStudentById);
+
 export const UserRoutes = router;

@@ -17,6 +17,7 @@ const includeTutor = {
       email: true,
       role: true,
       status: true,
+      imageUrl: true,
     },
   },
 };

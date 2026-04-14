@@ -49,9 +49,23 @@ const updateUserInfo = async (
   }
 };
 
+const getStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await UserService.getStudentById(req.params.id as string);
+    sendSuccessResponse(res, 200, "Student fetched successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const UserController = {
   getAllUsers,
   getUserById,
   updateUserStatus,
   updateUserInfo,
+  getStudentById,
 };
