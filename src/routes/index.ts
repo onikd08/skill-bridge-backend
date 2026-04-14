@@ -6,6 +6,7 @@ import { AvailabilityRoutes } from "../modules/availability/availability.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
 import { ReviewRoutes } from "../modules/review/review.route";
 import { UserRoutes } from "../modules/user/user.route";
+import { AiRoutes } from "../modules/ai/ai.route";
 
 const router = Router();
 
@@ -37,6 +38,10 @@ const routerManager = [
   {
     path: "/users",
     route: UserRoutes,
+  },
+  {
+    path: "/ai",
+    route: AiRoutes,
   },
 ];
 

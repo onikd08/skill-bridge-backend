@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AvailabilityService } from "./availability.service";
 import sendSuccessResponse from "../../utils/sendSuccessResponse";
-import { send } from "node:process";
 
 const createAvailableSlot = async (
   req: Request,
