@@ -21,7 +21,7 @@ async function sendMessageWithRetry(chat: any, message: string, retries = 3) {
 }
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
+  model: "gemini-flash-latest",
   systemInstruction:
     "You are the Skill-Bridge Assistant. Help users find tutors based on categories, explain how to book sessions, and answer general FAQ questions about the Skill-Bridge platform. Be friendly, concise, and helpful.",
 });
@@ -47,22 +47,27 @@ const chatWithAi = async (req: Request, res: Response): Promise<void> => {
     const call = response.functionCalls()?.[0];
 
     if (call) {
+      console.log("AI called Tool:", call.name, call.args);
       const toolName = call.name as keyof typeof tools;
       const data = await tools[toolName](call.args as any);
+      console.log("DB returned data:", JSON.stringify(data, null, 2));
+
+      const sanitizedData = JSON.parse(JSON.stringify(data));
 
       const finalResult = await chat.sendMessage([
         {
           functionResponse: {
             name: call.name,
-            response: { content: data },
+            response: { content: sanitizedData },
           },
         },
       ]);
+      const replyText = finalResult.response.text();
 
       res.status(200).json({
         success: true,
         message: "AI responded successfully",
-        data: { reply: finalResult.response.text() },
+        data: { reply: replyText },
       });
     } else {
       res.status(200).json({
